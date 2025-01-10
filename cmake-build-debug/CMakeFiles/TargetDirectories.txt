@@ -1,0 +1,4 @@
+/Users/matthewmcquistion/cleanfm/cmake-build-debug/CMakeFiles/cleanfm_lib.dir
+/Users/matthewmcquistion/cleanfm/cmake-build-debug/CMakeFiles/cleanfm.dir
+/Users/matthewmcquistion/cleanfm/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/matthewmcquistion/cleanfm/cmake-build-debug/CMakeFiles/rebuild_cache.dir
