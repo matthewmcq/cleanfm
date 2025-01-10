@@ -32,14 +32,14 @@ public:
 
 private:
     template<typename F>
-    static double goldenSectionSearch(const F& objective, double a, double b, const double tolerance = 1e-7) {
+    static double goldenSectionSearch(const F& objective, double a, double b) {
         double c = b - (b - a) / PHI;
         double d = a + (b - a) / PHI;
 
         double fc = objective(c);
         double fd = objective(d);
 
-        while (std::abs(b - a) > tolerance) {
+        while (std::abs(b - a) > GSS_TOLERANCE) {
             if (fc > fd) {
                 b = d;
                 d = c;
