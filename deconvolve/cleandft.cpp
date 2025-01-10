@@ -47,15 +47,6 @@ double CleanDFT::findOptimalPhase(const std::vector<Complex> &fft, const int cen
         data_slice.push_back(fft[bin]);
     }
 
-    // Phase search interval
-    double a = -2.0 * M_PI;
-    double b = 2.0 * M_PI;
-
-    // Initial points
-    double c = b - (b - a) / PHI;
-    double d = a + (b - a) / PHI;
-
-    // Function to evaluate correlation at a phase
     auto evaluate = [&](const double phase) {
         const std::vector<Complex> kernel = DirichletKernel::generateKernel(
             bins, frequency, phase, fft.size(), std::abs(fft[center_bin])
@@ -63,28 +54,7 @@ double CleanDFT::findOptimalPhase(const std::vector<Complex> &fft, const int cen
         return computeCorrelation(data_slice, kernel, true);
     };
 
-    // Golden section search
-    constexpr double tolerance = 1e-7;
-    double fc = evaluate(c);
-    double fd = evaluate(d);
-
-    while (std::abs(b - a) > tolerance) {
-        if (fc > fd) {
-            b = d;
-            d = c;
-            fd = fc;
-            c = b - (b - a) / PHI;
-            fc = evaluate(c);
-        } else {
-            a = c;
-            c = d;
-            fc = fd;
-            d = a + (b - a) / PHI;
-            fd = evaluate(d);
-        }
-    }
-
-    return (a + b) / 2.0;  // Return midpoint of final interval
+    return goldenSectionSearch(evaluate, -2.0 * M_PI, 2.0 * M_PI);
 }
 double CleanDFT::findOptimalFrequency(const std::vector<Complex> &fft, const int center_bin,
                                      const double test_frequency) {
@@ -106,15 +76,6 @@ double CleanDFT::findOptimalFrequency(const std::vector<Complex> &fft, const int
 
     const double center_phase = std::arg(fft[center_bin]);
 
-    // Frequency search interval
-    double a = test_frequency - 0.5;
-    double b = test_frequency + 0.5;
-
-    // Initial points
-    double c = b - (b - a) / PHI;
-    double d = a + (b - a) / PHI;
-
-    // Function to evaluate correlation at a frequency
     auto evaluate = [&](const double freq) {
         const std::vector<Complex> kernel = DirichletKernel::generateKernel(
             bins, freq, center_phase, fft.size(), std::abs(fft[center_bin])
@@ -122,28 +83,7 @@ double CleanDFT::findOptimalFrequency(const std::vector<Complex> &fft, const int
         return computeCorrelation(data_slice, kernel, false);
     };
 
-    // Golden section search
-    constexpr double tolerance = 1e-7;
-    double fc = evaluate(c);
-    double fd = evaluate(d);
-
-    while (std::abs(b - a) > tolerance) {
-        if (fc > fd) {
-            b = d;
-            d = c;
-            fd = fc;
-            c = b - (b - a) / PHI;
-            fc = evaluate(c);
-        } else {
-            a = c;
-            c = d;
-            fc = fd;
-            d = a + (b - a) / PHI;
-            fd = evaluate(d);
-        }
-    }
-
-    return (a + b) / 2.0;  // Return midpoint of final interval
+    return goldenSectionSearch(evaluate, test_frequency - 0.5, test_frequency + 0.5);
 }
 
 std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::vector<Complex> &fft,
@@ -223,7 +163,6 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
                 std::endl;
         const double retention = residual_energy / total_energy * 100;
         std::cout << "% L2 norm retained: " << retention << std::endl;
-        // std::cout << "% Energy norm retained: " << std::pow(retention,2) / 100 << std::endl;
 
         if (constexpr double THRESHOLD = 1e-6; residual_energy < THRESHOLD * total_energy) {
             break;

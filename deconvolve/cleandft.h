@@ -30,6 +30,33 @@ public:
 
     static std::vector<Component> deconvolveDirichletKernel(const std::vector<Complex> &fft, size_t sample_rate);
 
+private:
+    template<typename F>
+    static double goldenSectionSearch(const F& objective, double a, double b, const double tolerance = 1e-7) {
+        double c = b - (b - a) / PHI;
+        double d = a + (b - a) / PHI;
+
+        double fc = objective(c);
+        double fd = objective(d);
+
+        while (std::abs(b - a) > tolerance) {
+            if (fc > fd) {
+                b = d;
+                d = c;
+                fd = fc;
+                c = b - (b - a) / PHI;
+                fc = objective(c);
+            } else {
+                a = c;
+                c = d;
+                fc = fd;
+                d = a + (b - a) / PHI;
+                fd = objective(d);
+            }
+        }
+
+        return (a + b) / 2.0;
+    }
 };
 
 
