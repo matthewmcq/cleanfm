@@ -107,7 +107,7 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
         double max_magnitude = 0.0;
         for (int i = 0; i < nyquist_bin; i++) {
             if (const double magnitude = std::abs(residual[i]);
-                magnitude > max_magnitude && i < static_cast<double>(nyquist_bin) * 0.9) {
+                magnitude > max_magnitude && i < static_cast<double>(nyquist_bin) * 0.49) {
                 // Limit to 90% of Nyquist
                 max_magnitude = magnitude;
                 peak_bin = i;
@@ -115,7 +115,7 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
         }
 
         // Add sanity check
-        if (static_cast<double>(peak_bin) > static_cast<double>(nyquist_bin) * 0.9 || max_magnitude < 1e-6) {
+        if (static_cast<double>(peak_bin) > static_cast<double>(nyquist_bin) * 0.49 || max_magnitude < 1e-6) {
             std::cout << "Peak bin too high or magnitude too low, stopping..." << std::endl;
             break;
         }
