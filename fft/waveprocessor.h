@@ -25,6 +25,9 @@ class WaveProcessor
 public:
     static AudioData readWav(const char *filename);
     static std::vector<Complex> computeFFT(const std::vector<double> &samples);
+    static std::vector<double> computeIFFT(const std::vector<Complex>& spectrum);
+    static void writeWav(const char* filename, const std::vector<double>& samples,
+                        int sampleRate, int channels = 1);
 };
 
 

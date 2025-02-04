@@ -7,6 +7,7 @@
 #include "../constants.h"
 #include <cmath>
 #include <vector>
+#include "../fft/waveprocessor.h"
 #include "dirichletkernel.h"
 
 class CleanDFT {
@@ -29,6 +30,11 @@ public:
     static double findOptimalFrequency(const std::vector<Complex> &fft, int center_bin, double test_frequency);
 
     static std::vector<Component> deconvolveDirichletKernel(const std::vector<Complex> &fft, size_t sample_rate);
+    static std::vector<double> decompressComponents(const std::vector<Component> &components,
+                                                    size_t N, Complex DC);
+
+    static std::vector<double> resample(const std::vector<Component> &components, size_t N,
+                                        size_t original_sr, size_t target_sr, Complex DC);
 
 private:
     template<typename F>
