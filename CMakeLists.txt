@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 # Manually set up FFTW3
 add_library(FFTW3::FFTW3 SHARED IMPORTED)
 set_target_properties(FFTW3::FFTW3 PROPERTIES
-        IMPORTED_LOCATION "/opt/homebrew/Cellar/fftw/3.3.10_1/lib/libfftw3.dylib"
-        INTERFACE_INCLUDE_DIRECTORIES "/opt/homebrew/Cellar/fftw/3.3.10_1/include"
+        IMPORTED_LOCATION "/opt/homebrew/Cellar/fftw/3.3.10_2/lib/libfftw3.dylib"
+        INTERFACE_INCLUDE_DIRECTORIES "/opt/homebrew/Cellar/fftw/3.3.10_2/include"
 )
 
 # Library target

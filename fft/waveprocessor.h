@@ -9,7 +9,7 @@
 
 #include "../constants.h"
 #include <stdexcept>
-#include "/opt/homebrew/Cellar/fftw/3.3.10_1/include/fftw3.h"
+#include "/opt/homebrew/Cellar/fftw/3.3.10_2/include/fftw3.h"
 // #include <fftw3.h>
 
 

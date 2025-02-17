@@ -11,11 +11,12 @@ DirichletKernel::DirichletKernel(const double frequency, const double amplitude,
 Complex DirichletKernel::getValueAtBin(const double difference, const double phase, const size_t N) {
     constexpr std::complex<double> i(0, 1);
     const double numerator = std::sin(M_PI * difference);
-    const double denominator = std::sin(M_PI * difference / static_cast<double>(N));
+    const double denominator = std::sin( M_PI * difference / static_cast<double>(N));
     if (std::abs(difference) < 1e-16) {
         return std::exp(-i * phase);
     }
-    return numerator / denominator * std::exp(-i * (M_PI * difference + phase));
+
+    return (numerator /   denominator) * Complex(std::cos( (M_PI  * difference + phase)), -std::sin( (M_PI  * difference + phase)) );
 }
 
 double DirichletKernel::getAmplitudeAtBin(const double frequency, const double bin_magnitude, const size_t N,

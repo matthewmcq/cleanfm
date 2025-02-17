@@ -6,6 +6,7 @@
 #define CLEANDFT_H
 #include "../constants.h"
 #include <cmath>
+#include <iostream>
 #include <vector>
 #include "../fft/waveprocessor.h"
 #include "dirichletkernel.h"
@@ -20,6 +21,8 @@ public:
     };
 
     explicit CleanDFT();
+
+    static Complex computeDC(const std::vector<Component> &components, size_t N);
 
 
     static double computeCorrelation(const std::vector<Complex> &data_slice, const std::vector<Complex> &kernel,
@@ -41,11 +44,16 @@ private:
     static double goldenSectionSearch(const F& objective, double a, double b) {
         double c = b - (b - a) / PHI;
         double d = a + (b - a) / PHI;
+        // std::cout << a << " " << b << " " << c << " " << d << std::endl;
+
 
         double fc = objective(c);
         double fd = objective(d);
 
+        // std::cout << fc << " " << fd << std::endl;
+
         while (std::abs(b - a) > GSS_TOLERANCE) {
+            // std::cout << "diff: " << std::abs(b - a) << std::endl;
             if (fc > fd) {
                 b = d;
                 d = c;

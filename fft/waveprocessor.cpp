@@ -3,6 +3,9 @@
 //
 
 #include "waveprocessor.h"
+
+#include <iostream>
+
 #include "../libs/dr_wav.h"
 
 #define DR_WAV_IMPLEMENTATION
@@ -79,6 +82,7 @@ std::vector<Complex> WaveProcessor::computeFFT(const std::vector<double> &sample
 
 std::vector<double> WaveProcessor::computeIFFT(const std::vector<Complex> &spectrum) {
     size_t N = spectrum.size();
+    // std::cout << "N = " << N << std::endl;
 
     // FFTW plan and arrays
     fftw_complex *in = (fftw_complex *) fftw_malloc(sizeof(fftw_complex) * N);
@@ -116,6 +120,10 @@ void WaveProcessor::writeWav(const char *filename, const std::vector<double> &sa
     format.channels = channels;
     format.sampleRate = sampleRate;
     format.bitsPerSample = 16;
+
+    std::cout << "Writing WAV file " << filename << std::endl;
+    std::cout << "Sample rate: " << sampleRate << std::endl;
+    std::cout << "Channels: " << channels << std::endl;
 
     drwav wav;
     if (!drwav_init_file_write(&wav, filename, &format, NULL)) {
