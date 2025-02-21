@@ -24,7 +24,7 @@ void writeComponentsToCSV(const std::vector<CleanDFT::Component>& components,
 int main() {
     const auto start = std::chrono::high_resolution_clock::now();
     auto [leftChannel, rightChannel, sampleRate, channels]
-            = WaveProcessor::readWav("examples/sine_wave_440hz.wav");
+            = WaveProcessor::readWav("examples/TEST_INTRO_SHORT.wav");
     std::cout << "Loaded audio: "
             << channels << " channels, "
             << leftChannel.size() << " samples at "

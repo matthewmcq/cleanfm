@@ -202,9 +202,18 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
 
 
         // Update residual
-        for (size_t i = 1; i < residual.size(); i++) {
+        for (size_t i = 1; i < N/2; i++) {  // Only go up to N/2
+            // Positive frequency
             double diff = true_freq - static_cast<double>(i);
-            residual[i] -=  amplitude * DirichletKernel::getValueAtBin(diff, true_phase, N);
+            double corrected_phase = true_phase + M_PI * diff / N;
+            residual[i] -= amplitude * DirichletKernel::getValueAtBin(diff, corrected_phase, N);
+
+            // Mirror frequency
+            size_t mirror_bin = N - i;
+            double mirror_diff = true_freq - static_cast<double>(mirror_bin);
+            double mirror_phase = true_phase + M_PI * mirror_diff / N;
+            // Mirror should be complex conjugate
+            residual[i] -= std::conj(amplitude * DirichletKernel::getValueAtBin(mirror_diff, mirror_phase, N));
         }
 
         // Calculate residual energy
@@ -227,10 +236,10 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
                 std::endl;
         const double retention = residual_energy / total_energy * 100;
 
-        if (std::abs(prev_retention - retention) < 1e-6) {
-            break;
-        }
-        prev_retention = retention;
+        // if (std::abs(prev_retention - retention) < 1e-6) {
+        //     break;
+        // }
+        // prev_retention = retention;
         // const double retention_check = residual_energy_check / total_energy * 100;
         std::cout << "% L2 norm retained: " << retention << std::endl;
         // std::cout << "% L2 norm retained (check): " << retention_check << std::endl;

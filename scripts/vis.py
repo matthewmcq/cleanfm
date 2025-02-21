@@ -36,7 +36,7 @@ df_spectrum['frequency_hz'] = df_spectrum['bin'] * sample_rate / len(df_spectrum
 
 
 # Compute FFT
-y, sr = librosa.load('../examples/sine_wave_440hz.wav', sr=48000, mono=True)
+y, sr = librosa.load('../examples/TEST_INTRO_SHORT.wav', sr=48000, mono=True)
 fft_data = np.fft.fft(y)
 
 phase = df['phase'].values[0]
@@ -55,57 +55,57 @@ bins = np.arange(center_bin-window_size, center_bin+window_size+1)
 mask = (bins >= 0) & (bins < N//2)
 bins = bins[mask]
 
-ax.scatter(fft_data.real[bins], 
-         fft_data.imag[bins], 
-         bins,
-         c='blue', label='FFT', s=10, alpha=0.5)
+# ax.scatter(fft_data.real[bins], 
+#          fft_data.imag[bins], 
+#          bins,
+#          c='blue', label='FFT', s=10, alpha=0.5)
 
-# Plot spectrum data
-spectrum_points = np.zeros((len(df_spectrum), 3))
-for i, row in df_spectrum.iterrows():
+# # Plot spectrum data
+# spectrum_points = np.zeros((len(df_spectrum), 3))
+# for i, row in df_spectrum.iterrows():
     
-    spectrum_points[i] = [row['real'], row['imag'], row['bin']]
+#     spectrum_points[i] = [row['real'], row['imag'], row['bin']]
     
-spectrum_points = spectrum_points[center_bin-window_size:center_bin+window_size]
-print(spectrum_points.shape)
-print(bins.shape)
+# spectrum_points = spectrum_points[center_bin-window_size:center_bin+window_size]
+# print(spectrum_points.shape)
+# print(bins.shape)
 
 
-ax.scatter(df_spectrum['real'][bins],
-         df_spectrum['imag'][bins],
-          df_spectrum['bin'][bins],
-          c='green', label='Spectrum', s=10, alpha=0.5)
+# ax.scatter(df_spectrum['real'][bins],
+#          df_spectrum['imag'][bins],
+#           df_spectrum['bin'][bins],
+#           c='green', label='Spectrum', s=10, alpha=0.5)
 
-# Generate and plot Dirichlet kernel
-num_points = 10000
-plot_bins = np.linspace(center_bin-window_size, center_bin+window_size, num_points)
-kernel_points = np.zeros((len(plot_bins), 3))
+# # Generate and plot Dirichlet kernel
+# num_points = 10000
+# plot_bins = np.linspace(center_bin-window_size, center_bin+window_size, num_points)
+# kernel_points = np.zeros((len(plot_bins), 3))
 
 
 
-for i, m in enumerate(plot_bins):
-    diff = frequency - m
-    if abs(diff) < 1e-16:
-        value = np.exp(-1j * 0)  # Phase 0 for simple sine
-    else:
-        num = np.sin(np.pi * diff)
-        denom = np.sin(np.pi * diff/N)
-        value = (num/denom) * np.exp(-1j * (np.pi *diff) - 1j*phase)
+# for i, m in enumerate(plot_bins):
+#     diff = frequency - m
+#     if abs(diff) < 1e-16:
+#         value = np.exp(-1j * 0)  # Phase 0 for simple sine
+#     else:
+#         num = np.sin(np.pi * diff)
+#         denom = np.sin(np.pi * diff/N)
+#         value = (num/denom) * np.exp(-1j * (np.pi *diff) - 1j*phase)
     
-    kernel_points[i] = [ amp* value.real, amp *value.imag, m]
+#     kernel_points[i] = [ amp* value.real, amp *value.imag, m]
 
-ax.plot(kernel_points[:,0], 
-       kernel_points[:,1], 
-       kernel_points[:,2],
-       'r-', label='Dirichlet Kernel', linewidth=1.5)
+# ax.plot(kernel_points[:,0], 
+#        kernel_points[:,1], 
+#        kernel_points[:,2],
+#        'r-', label='Dirichlet Kernel', linewidth=1.5)
 
-ax.set_xlabel('Real')
-ax.set_ylabel('Imaginary')
-ax.set_zlabel('Frequency Bin')
-ax.legend()
+# ax.set_xlabel('Real')
+# ax.set_ylabel('Imaginary')
+# ax.set_zlabel('Frequency Bin')
+# ax.legend()
 
-plt.title('3D Visualization of 440Hz Sine Wave FFT and Dirichlet Kernel')
-plt.show()
+# plt.title('3D Visualization of 440Hz Sine Wave FFT and Dirichlet Kernel')
+# plt.show()
 
 
 # Read the CSV
@@ -119,7 +119,7 @@ df['decomp'] = 1
 
 
 
-audio_path = '../examples/sine_wave_440hz.wav'
+audio_path = '../examples/TEST_INTRO_SHORT.wav'
 y, sr = librosa.load(audio_path, sr=48000, mono=False)
 
 print(y.shape)
