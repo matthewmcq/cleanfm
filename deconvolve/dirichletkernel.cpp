@@ -16,7 +16,7 @@ Complex DirichletKernel::getValueAtBin(const double difference, const double pha
         return std::exp(-i * phase);
     }
 
-    return (numerator /   denominator) * Complex(std::cos( (M_PI  * difference + phase)), -std::sin( (M_PI  * difference + phase)) );
+    return (numerator /   denominator) * Complex(std::cos( (M_PI  * difference +  phase)), -std::sin( (M_PI  * difference  + phase)) );
 }
 
 double DirichletKernel::getAmplitudeAtBin(const double frequency, const double bin_magnitude, const size_t N,

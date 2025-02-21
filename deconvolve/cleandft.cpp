@@ -69,7 +69,7 @@ double CleanDFT::findOptimalPhase(const std::vector<Complex> &fft, const int cen
         return computeCorrelation(data_slice, kernel, true);
     };
 
-    return goldenSectionSearch(evaluate, -2.0 * M_PI, 2.0 * M_PI);
+    return goldenSectionSearch(evaluate, -1.0 * M_PI, 1.0 * M_PI);
 }
 
 double CleanDFT::findOptimalFrequency(const std::vector<Complex> &fft, const int center_bin,
@@ -204,9 +204,6 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
         // Update residual
         for (size_t i = 1; i < residual.size(); i++) {
             double diff = true_freq - static_cast<double>(i);
-            // std::cout << true_freq << " " <<diff << std::endl;
-            // std::cout << std::arg(DirichletKernel::getValueAtBin(diff, true_phase, N)) << std::endl;
-            // std::cout << true_phase << std::endl;
             residual[i] -=  amplitude * DirichletKernel::getValueAtBin(diff, true_phase, N);
         }
 
@@ -266,14 +263,15 @@ std::vector<double> CleanDFT::decompressComponents(const std::vector<Component> 
     std::vector<Complex> spectrum(N, Complex(0, 0));
     spectrum[0] = computeDC(components, N);
 
-    // spectrum[0] /= static_cast<double>(N);
 
-
+    // Phase correction to ensure periodicity
     for (const auto &[true_frequency, true_phase, amplitude]: components) {
-        for (size_t m = 1; m < N/2; m++) {
+        for (size_t m = 1; m < N ; m++) {
             const double diff = true_frequency - static_cast<double>(m);
+            // Add phase correction term to ensure periodicity
+            double corrected_phase =  true_phase + M_PI * diff / N;
             spectrum[m] += amplitude * DirichletKernel::getValueAtBin(
-                diff, true_phase, N
+                diff, corrected_phase, N
             );
         }
     }
@@ -282,11 +280,13 @@ std::vector<double> CleanDFT::decompressComponents(const std::vector<Component> 
 
 
 
-    for (size_t m = 0; m < N / 2; m++) {
-        spectrum[N - m] = std::conj(spectrum[m]);
+    for (size_t m = 1; m <= N/ 2; m++) {
+        spectrum[N - m] += std::conj(spectrum[m]); // * Complex(0, 1);
     }
 
-    // std::cout << "N = " << N << std::endl;
+    for (size_t m = 1; m <= N/ 2; m++) {
+        spectrum[m] = std::conj(spectrum[N-m]); // * Complex(0, 1);
+    }
 
     writeSpectrumToCSV(spectrum, "spectrum_before_ifft.csv");
 

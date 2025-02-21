@@ -50,7 +50,7 @@ ax = fig.add_subplot(111, projection='3d')
 
 # Plot actual FFT points around the frequency of interest
 window_size = 100
-center_bin = int(freq * N / sample_rate) - 2000  # Convert 440Hz to bin number
+center_bin = int(freq * N / sample_rate) -500 # Convert 440Hz to bin number
 bins = np.arange(center_bin-window_size, center_bin+window_size+1)
 mask = (bins >= 0) & (bins < N//2)
 bins = bins[mask]
@@ -115,9 +115,6 @@ df['amplitude_db'] = 20 * np.log10(df['amplitude'] / max_db + 1e-10)
 df['decomp'] = 1
 
 #remove lowest frequency
-
-
-exit()
 
 
 
@@ -205,7 +202,7 @@ scatter = plt.scatter(df['frequency_hz'], df['phase'],
 plt.colorbar(scatter, label='Amplitude')
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('Phase (radians)')
-plt.xscale('log')
+# plt.xscale('log')
 plt.title('Frequency vs Phase Relationship')
 
 # Optional: Add grid
@@ -213,7 +210,6 @@ plt.grid(True, alpha=0.3)
 
 plt.show()
 
-exit()
 
 # Get top 5 frequencies by amplitude
 top_5 = df.nlargest(5, 'amplitude')
