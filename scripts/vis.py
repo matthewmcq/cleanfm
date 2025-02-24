@@ -180,7 +180,7 @@ df2 = pd.DataFrame({'frequency_hz': frequency,
 df2['amplitude_db'] = 20 * np.log10(df2['amplitude'] / max_db + 1e-10)
 
 # join the two dataframes
-df = pd.concat([df, df2], ignore_index=True)
+# df = pd.concat([df, df2], ignore_index=True)
 
 
 

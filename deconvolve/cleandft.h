@@ -69,6 +69,8 @@ private:
             }
         }
 
+        // std::cout << (a + b) / 2.0 << std::endl;
+
         return (a + b) / 2.0;
     }
 };

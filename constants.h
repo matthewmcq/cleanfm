@@ -24,3 +24,5 @@ inline double CONVERGENCE = 1e-6;
 
 
 #endif //CONSTANTS_H
+// Component 6463: true bin=3073.52: old bin=6403, phase=-2.40836
+// % L2 norm retained: 0.0724548

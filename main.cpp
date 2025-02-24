@@ -30,6 +30,10 @@ int main() {
             << leftChannel.size() << " samples at "
             << sampleRate << " Hz\n";
 
+    // for (const auto& channel : leftChannel) {
+    //     std::cout << channel << "\n";
+    // }
+
     // Compute FFT for left channel only
     const std::vector<Complex> spectrum = WaveProcessor::computeFFT(rightChannel);
     const Complex DC = spectrum[0];

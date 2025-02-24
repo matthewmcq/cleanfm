@@ -10,9 +10,9 @@
 
 CleanDFT::CleanDFT() = default;
 
-Complex CleanDFT::computeDC(const std::vector<Component>& components, const size_t N) {
+Complex CleanDFT::computeDC(const std::vector<Component> &components, const size_t N) {
     Complex new_dc = 0;
-    for (const auto&[true_frequency, true_phase, amplitude] : components) {
+    for (const auto &[true_frequency, true_phase, amplitude]: components) {
         // Compute how each component contributes to bin 0
         new_dc += amplitude * DirichletKernel::getValueAtBin(
             -true_frequency,
@@ -26,13 +26,23 @@ Complex CleanDFT::computeDC(const std::vector<Component>& components, const size
 double CleanDFT::computeCorrelation(const std::vector<Complex> &data_slice, const std::vector<Complex> &kernel,
                                     const bool isPhase) {
     Complex numerator = 0;
+    // std::cout << "data slice size: " << data_slice.size() << std::endl;
     for (size_t i = 0; i < data_slice.size(); i++) {
+        // std::cout << i << std::endl;
+        // std::cout << "data slice[i] " << data_slice[i].real() << " " << data_slice[i].imag() << std::endl;
+        // std::cout << "conj kernel slice[i] " << std::conj(kernel[i]).real() << " " << std::conj(kernel[i]).imag() << std::endl;
         numerator += data_slice[i] * std::conj(kernel[i]);
     }
+
 
     double data_norm = 0;
     double kernel_norm = 0;
     for (size_t i = 0; i < data_slice.size(); i++) {
+        // std::cout << i << std::endl;
+        // std::cout << "prev data norm: " << data_norm << std::endl;
+        // std::cout << "data norm[i]: " << data_slice[i].real() << " " << data_slice[i].imag() << "calc: " << std::abs(data_slice[i]) * std::abs(data_slice[i]) << std::endl;
+        // std::cout << "prev kernel norm: " << kernel_norm << std::endl;
+        // std::cout << "kernel norm[i]: " << kernel[i].real() << " " << kernel[i].imag() << " calc: " << std::abs(kernel[i]) * std::abs(kernel[i]) << std::endl;
         data_norm += std::abs(data_slice[i]) * std::abs(data_slice[i]);
         kernel_norm += std::abs(kernel[i]) * std::abs(kernel[i]);
     }
@@ -42,7 +52,12 @@ double CleanDFT::computeCorrelation(const std::vector<Complex> &data_slice, cons
         return std::real(numerator) / (std::sqrt(data_norm) * std::sqrt(kernel_norm));
     }
     // For frequency correlation, we want the magnitude
-    return std::abs(numerator) / (std::sqrt(data_norm) * std::sqrt(kernel_norm));
+
+
+
+    double ret = std::abs(numerator) / (std::sqrt(data_norm) * std::sqrt(kernel_norm));
+
+    return ret;
 }
 
 double CleanDFT::findOptimalPhase(const std::vector<Complex> &fft, const int center_bin, const double frequency) {
@@ -50,7 +65,7 @@ double CleanDFT::findOptimalPhase(const std::vector<Complex> &fft, const int cen
     std::vector<int> bins;
     for (int i = center_bin - PHASE_WINDOW_SIZE;
          i <= center_bin + PHASE_WINDOW_SIZE; i++) {
-        if (i >= 0 && i < fft.size() / 2) {
+        if (i >= 0 && i < fft.size()) {
             bins.push_back(i);
         }
     }
@@ -64,12 +79,15 @@ double CleanDFT::findOptimalPhase(const std::vector<Complex> &fft, const int cen
 
     auto evaluate = [&](const double phase) {
         const std::vector<Complex> kernel = DirichletKernel::generateKernel(
-            bins, frequency, phase, fft.size() , std::abs(fft[center_bin])
+            bins, frequency, phase, fft.size(), std::abs(fft[center_bin])
         );
         return computeCorrelation(data_slice, kernel, true);
     };
 
-    return goldenSectionSearch(evaluate, -1.0 * M_PI, 1.0 * M_PI);
+    double ret = goldenSectionSearch(evaluate, -1.0 * M_PI, 1.0 * M_PI);
+
+    // std::cout << "" << ret << std::endl;
+    return ret;
 }
 
 double CleanDFT::findOptimalFrequency(const std::vector<Complex> &fft, const int center_bin,
@@ -78,7 +96,7 @@ double CleanDFT::findOptimalFrequency(const std::vector<Complex> &fft, const int
     std::vector<int> bins;
     for (int i = center_bin - FREQUENCY_WINDOW_SIZE;
          i <= center_bin + FREQUENCY_WINDOW_SIZE; i++) {
-        if (i >= 0 && i < fft.size() / 2) {
+        if (i >= 0 && i < fft.size()) {
             bins.push_back(i);
         }
     }
@@ -100,7 +118,9 @@ double CleanDFT::findOptimalFrequency(const std::vector<Complex> &fft, const int
         return computeCorrelation(data_slice, kernel, false);
     };
 
-    return goldenSectionSearch(evaluate, test_frequency - 0.5, test_frequency + 0.5);
+    double ret =  goldenSectionSearch(evaluate, test_frequency - 0.5, test_frequency + 0.5);
+    // std::cout << "Frequecny :" << ret << std::endl;
+    return ret;
 }
 
 std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::vector<Complex> &fft,
@@ -115,7 +135,6 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
     std::copy_n(fft.begin(), nyquist_bin, residual.begin());
 
     residual[0] *= 0.0; // remove DC
-
 
 
     // std::copy_n(fft.begin(), nyquist_bin, residual_check.begin());
@@ -135,19 +154,26 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
         for (int i = 1; i < nyquist_bin; i++) {
             // start @ 1 to skip DC since we deal w it separately
             const double magnitude = std::abs(residual[i]);
-            if
-                (magnitude > max_magnitude && i < static_cast<double>(nyquist_bin) * 0.49) {
+            if (magnitude > max_magnitude && i < static_cast<double>(nyquist_bin) * 0.99 ) {
                 // ^^^^Not sure why we need 1/4 Nyquist -- TODO: FIX LATER!!!!!
                 // Limit to 90% of Nyquist
+                // std::cout << nyquist_bin << " " << N << std::endl;
+                // std::cout << "Prev max mag: " << max_magnitude << std::endl;
+                // std::cout << "i: " << i << std::endl;
+                // std::cout << "residual: " << residual[i] << std::endl;
+                // std::cout << "abs of residual: "<< std::abs(residual[i]) << std::endl;
                 max_magnitude = magnitude;
+                // std::cout << "new max mag: " << max_magnitude << std::endl;
                 peak_bin = i;
-
             }
         }
 
         // Add sanity check
-        if (static_cast<double>(peak_bin) > static_cast<double>(nyquist_bin) * 0.49 || max_magnitude < 1e-6) {
+        if (static_cast<double>(peak_bin) >= static_cast<double>(nyquist_bin) * 0.99 || max_magnitude < 1e-6) {
+
+
             std::cout << "Peak bin too high or magnitude too low, stopping..." << std::endl;
+            std::cout << peak_bin << " " << peak_bin * sample_rate / N << std::endl;
             break;
         }
 
@@ -158,12 +184,21 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
         const double true_freq = findOptimalFrequency(residual, peak_bin, peak_bin);
         // std::cout << peak_bin * static_cast<double>(sample_rate) / static_cast<double>(N) << std::endl;
         // std::cout << true_freq * static_cast<double>(sample_rate) / static_cast<double>(N) << std::endl;
-        const double true_phase =  findOptimalPhase(residual, peak_bin, true_freq);
+        const double true_phase = findOptimalPhase(residual, peak_bin, true_freq);
 
-        const double amplitude = DirichletKernel::getAmplitudeAtBin(true_freq, std::abs(residual[peak_bin]), N, peak_bin);
+        const double amplitude = DirichletKernel::getAmplitudeAtBin(true_freq, std::abs(residual[peak_bin]), N,
+                                                                    peak_bin);
+
+        // std::cout << "amplitude: " << amplitude << std::endl;
+        // std::cout << "mag: " << std::abs(residual[peak_bin]) << std::endl;
+        // std::cout << "peak: " << peak_bin << std::endl;
+        // std::cout << "true_freq: " << true_freq*1.00 << std::endl;
+        // double diff_ = true_freq - static_cast<double>(peak_bin);
+        // Complex val = DirichletKernel::getValueAtBin(diff_, true_phase + M_PI * diff_ / N, N);
+        // std::cout << "kernel: " << val << std::endl;
+        // std::cout << "amp * kernel" << amplitude * val  << std::endl;
 
         // Calculate amplitude
-
 
 
         // Generate subtraction kernel
@@ -177,7 +212,6 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
         // for (int m = 0; m < nyquist_bin; m++) {
         //     kernel_bins.push_back(m);
         // }
-
 
 
         // std::vector<Complex> subtract = DirichletKernel::generateKernel(
@@ -202,7 +236,8 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
 
 
         // Update residual
-        for (size_t i = 1; i < N/2; i++) {  // Only go up to N/2
+        for (size_t i = 1; i < N / 2; i++) {
+            // Only go up to N/2
             // Positive frequency
             double diff = true_freq - static_cast<double>(i);
             double corrected_phase = true_phase + M_PI * diff / N;
@@ -229,7 +264,7 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
 
         // Print progress
         std::cout << "Component " << components.size() << ": true bin="
-                << true_freq * sample_rate / static_cast<double>(N) <<
+                << true_freq  <<
                 ": old bin="
                 << peak_bin
                 << ", phase=" << true_phase <<
@@ -252,16 +287,16 @@ std::vector<CleanDFT::Component> CleanDFT::deconvolveDirichletKernel(const std::
     return components;
 }
 
-void writeSpectrumToCSV(const std::vector<Complex>& spectrum, const std::string& filename) {
+void writeSpectrumToCSV(const std::vector<Complex> &spectrum, const std::string &filename) {
     std::ofstream file(filename);
     file << "bin,magnitude,phase,real,imag\n";
 
     for (size_t i = 0; i < spectrum.size(); i++) {
         file << i << ","
-             << std::abs(spectrum[i]) << ","
-             << std::arg(spectrum[i]) << ","
-             << spectrum[i].real() << ","
-             << spectrum[i].imag() << "\n";
+                << std::abs(spectrum[i]) << ","
+                << std::arg(spectrum[i]) << ","
+                << spectrum[i].real() << ","
+                << spectrum[i].imag() << "\n";
     }
 }
 
@@ -275,10 +310,10 @@ std::vector<double> CleanDFT::decompressComponents(const std::vector<Component> 
 
     // Phase correction to ensure periodicity
     for (const auto &[true_frequency, true_phase, amplitude]: components) {
-        for (size_t m = 1; m < N ; m++) {
+        for (size_t m = 1; m < N; m++) {
             const double diff = true_frequency - static_cast<double>(m);
             // Add phase correction term to ensure periodicity
-            double corrected_phase =  true_phase + M_PI * diff / N;
+            double corrected_phase = true_phase + M_PI * diff / N;
             spectrum[m] += amplitude * DirichletKernel::getValueAtBin(
                 diff, corrected_phase, N
             );
@@ -288,13 +323,12 @@ std::vector<double> CleanDFT::decompressComponents(const std::vector<Component> 
     // Handle symmetry
 
 
-
-    for (size_t m = 1; m <= N/ 2; m++) {
+    for (size_t m = 1; m <= N / 2; m++) {
         spectrum[N - m] += std::conj(spectrum[m]); // * Complex(0, 1);
     }
 
-    for (size_t m = 1; m <= N/ 2; m++) {
-        spectrum[m] = std::conj(spectrum[N-m]); // * Complex(0, 1);
+    for (size_t m = 1; m <= N / 2; m++) {
+        spectrum[m] = std::conj(spectrum[N - m]); // * Complex(0, 1);
     }
 
     writeSpectrumToCSV(spectrum, "spectrum_before_ifft.csv");
