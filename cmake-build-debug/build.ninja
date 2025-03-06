@@ -102,7 +102,7 @@ build cmake_object_order_depends_target_cleanfm: phony || cmake_object_order_dep
 build CMakeFiles/cleanfm.dir/main.cpp.o: CXX_COMPILER__cleanfm_unscanned_Debug /Users/matthewmcquistion/cleanfm/main.cpp || cmake_object_order_depends_target_cleanfm
   DEP_FILE = CMakeFiles/cleanfm.dir/main.cpp.o.d
   FLAGS = -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/matthewmcquistion/cleanfm/libs -isystem /opt/homebrew/Cellar/fftw/3.3.10_1/include
+  INCLUDES = -I/Users/matthewmcquistion/cleanfm/libs -isystem /opt/homebrew/Cellar/fftw/3.3.10_2/include
   OBJECT_DIR = CMakeFiles/cleanfm.dir
   OBJECT_FILE_DIR = CMakeFiles/cleanfm.dir
 
@@ -114,9 +114,9 @@ build CMakeFiles/cleanfm.dir/main.cpp.o: CXX_COMPILER__cleanfm_unscanned_Debug /
 #############################################
 # Link the executable cleanfm
 
-build cleanfm: CXX_EXECUTABLE_LINKER__cleanfm_Debug CMakeFiles/cleanfm.dir/main.cpp.o | libcleanfm_lib.a /opt/homebrew/Cellar/fftw/3.3.10_1/lib/libfftw3.dylib || libcleanfm_lib.a
+build cleanfm: CXX_EXECUTABLE_LINKER__cleanfm_Debug CMakeFiles/cleanfm.dir/main.cpp.o | libcleanfm_lib.a /opt/homebrew/Cellar/fftw/3.3.10_2/lib/libfftw3.dylib || libcleanfm_lib.a
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk
-  LINK_LIBRARIES = libcleanfm_lib.a  /opt/homebrew/Cellar/fftw/3.3.10_1/lib/libfftw3.dylib
+  LINK_LIBRARIES = libcleanfm_lib.a  /opt/homebrew/Cellar/fftw/3.3.10_2/lib/libfftw3.dylib
   OBJECT_DIR = CMakeFiles/cleanfm.dir
   POST_BUILD = :
   PRE_LINK = :

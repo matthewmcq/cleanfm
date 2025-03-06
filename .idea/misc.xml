@@ -14,6 +14,7 @@
     <sourceRoots>
       <file path="$PROJECT_DIR$/deconvolve" />
       <file path="$PROJECT_DIR$/fft" />
+      <file path="$PROJECT_DIR$/fm" />
     </sourceRoots>
   </component>
 </project>

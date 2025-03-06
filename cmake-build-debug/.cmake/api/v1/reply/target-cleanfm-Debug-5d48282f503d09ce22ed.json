@@ -25,13 +25,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 31,
+				"line" : 37,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 34,
+				"line" : 40,
 				"parent" : 0
 			}
 		]
@@ -54,7 +54,7 @@
 				{
 					"backtrace" : 2,
 					"isSystem" : true,
-					"path" : "/opt/homebrew/Cellar/fftw/3.3.10_1/include"
+					"path" : "/opt/homebrew/Cellar/fftw/3.3.10_2/include"
 				}
 			],
 			"language" : "CXX",
@@ -99,7 +99,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/opt/homebrew/Cellar/fftw/3.3.10_1/lib/libfftw3.dylib",
+				"fragment" : "/opt/homebrew/Cellar/fftw/3.3.10_2/lib/libfftw3.dylib",
 				"role" : "libraries"
 			}
 		],

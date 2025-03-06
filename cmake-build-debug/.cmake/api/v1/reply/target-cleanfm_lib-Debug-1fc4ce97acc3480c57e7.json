@@ -33,13 +33,13 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 41,
+				"line" : 47,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 25,
+				"line" : 31,
 				"parent" : 0
 			}
 		]
@@ -110,7 +110,8 @@
 				1,
 				2,
 				4,
-				6
+				6,
+				7
 			]
 		}
 	],
@@ -152,6 +153,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "deconvolve/cleandft.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "deconvolve/threadpool.h",
 			"sourceGroupIndex" : 1
 		}
 	],
