@@ -28,19 +28,21 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 # Generate sine wave
-N = 441975 # 48000 * 2# FFT size
+N = 48000 # 48000 * 2# FFT size
 sample_rate = 48000
 t = np.arange(N) / sample_rate
 freq = 440  # A4 note
 signal = np.sin(2*np.pi * freq * t)
 
-df = pd.read_csv('../components.csv')
-max_db = df['amplitude'].max() 
-df['amplitude_db'] = None #20 * np.log10(df['amplitude'] / max_db + 1e-10)
+df= pd.read_csv('../components.csv')
+max_db = 1 #df['amplitude'].max() 
+df['amplitude_db'] = 20 * np.log10(df['amplitude'] / max_db + 1e-10)
 df['decomp'] = 1
 
+df1 = df.copy()
 
-audio_path = '../examples/TEST_INTRO_SHORT.wav'
+
+audio_path = '../examples/test_runtime/TEST_2s.wav'
 
 y, sr = librosa.load(audio_path, sr=48000, mono=False)
 N = len(y[0])
@@ -62,6 +64,8 @@ print(np.max(magnitude))
 #normalize magnitude
 max_val = np.max(magnitude)
 min_val = np.min(magnitude)
+min_val_og = min_val
+max_val_og = max_val
 # magnitude = (magnitude - min_val) / (max_val - min_val)
 frequency = sr * np.linspace(0, 1, len_original)
 phase = np.angle(fft)
@@ -92,7 +96,7 @@ df_spectrum['frequency_hz'] = df_spectrum['bin'] * sample_rate / len(df_spectrum
 
 
 # Compute FFT
-y, sr = librosa.load('../examples/TEST_INTRO_SHORT.wav', sr=48000, mono=True)
+y, sr = librosa.load('../examples/test_runtime/TEST_2s.wav', sr=48000, mono=True)
 fft_data = np.fft.fft(y)
 
 phase = df['phase'].values[0]
@@ -113,7 +117,7 @@ bins = bins[mask]
 
 ax.scatter(fft_data.real[bins], 
          fft_data.imag[bins], 
-         bins,
+         bins * sample_rate / N,
          c='blue', label='FFT', s=10, alpha=0.5)
 
 # Plot spectrum data
@@ -129,7 +133,7 @@ print(bins.shape)
 
 ax.scatter(df_spectrum['real'][bins],
          df_spectrum['imag'][bins],
-          df_spectrum['bin'][bins],
+          df_spectrum['bin'][bins]* sample_rate / N,
           c='green', label='Spectrum', s=10, alpha=0.5)
 
 # Generate and plot Dirichlet kernel
@@ -137,6 +141,24 @@ num_points = 10000
 plot_bins = np.linspace(center_bin-window_size, center_bin+window_size, num_points)
 kernel_points = np.zeros((len(plot_bins), 3))
 
+# print RMS of df_spectrum and df2
+# normalize for comparison
+#print total amplitude of df2
+sum_df2 = df2['amplitude'].sum()
+print("SUM DF2: ", sum_df2)
+
+overall_max = max(df_spectrum['amplitude'].max(), df2['amplitude'].max())
+# df_spectrum['amplitude'] /= overall_max
+
+
+rmse = np.sqrt(np.mean((df_spectrum['amplitude'] - df2['amplitude'])**2))
+print("RMSE: ", rmse)
+sum_df2 = df2['amplitude'].sum()
+
+df2_max = df2['amplitude'].max()
+print("SUM DF2: ", sum_df2)
+print(rmse / sum_df2)
+# exit()
 
 
 for i, m in enumerate(plot_bins):
@@ -150,14 +172,16 @@ for i, m in enumerate(plot_bins):
     
     kernel_points[i] = [ amp* value.real, amp *value.imag, m]
 
+
+print(f"N: {N}, sr: {sample_rate}")
 ax.plot(kernel_points[:,0], 
        kernel_points[:,1], 
-       kernel_points[:,2],
+       kernel_points[:,2] * sample_rate / N,
        'r-', label='Dirichlet Kernel', linewidth=1.5)
 
 ax.set_xlabel('Real')
 ax.set_ylabel('Imaginary')
-ax.set_zlabel('Frequency Bin')
+ax.set_zlabel('Frequency Hz')
 ax.legend()
 
 plt.title('3D Visualization of 440Hz Sine Wave FFT and Dirichlet Kernel')
@@ -185,7 +209,7 @@ plt.show()
 
 df = pd.concat([df, df2], ignore_index=True)
 
-audio_path = '../TIS_difference.wav'
+audio_path = '../examples/test_runtime/TEST_2s.wav'
 y, sr = librosa.load(audio_path, sr=48000, mono=True)
 
 fft = np.fft.fft(y)
@@ -199,20 +223,20 @@ magnitude = np.abs(fft)
 #normalize magnitude
 max_val = np.max(magnitude)
 min_val = np.min(magnitude)
-magnitude = (magnitude - min_val) / (max_val - min_val)
+
 frequency = sr * np.linspace(0, 1, len_original)
 phase = np.angle(fft)
 
 # Create a DataFrame
-df2 = pd.DataFrame({'frequency_hz': frequency,
+df3 = pd.DataFrame({'frequency_hz': frequency,
                    'amplitude': magnitude,
                    'phase': phase,
                    'decomp': 2})
 
-df2['amplitude_db'] = 20 * np.log10(df2['amplitude'] / max_db + 1e-10)
+df3['amplitude_db'] = 20 * np.log10(df3['amplitude'] / max_db + 1e-10)
 
 # join the two dataframes
-df = pd.concat([df, df2], ignore_index=True)
+df = pd.concat([df, df3], ignore_index=True)
 
 
 
@@ -254,35 +278,59 @@ for idx, row in top_5.iterrows():
 # Create plot
 plt.figure(figsize=(15, 8))
 
+# normalize df1 to df2 
+df1['amplitude'] = df1['amplitude'] / df1['amplitude'].max()
+df2['amplitude'] = df2['amplitude'] / df2['amplitude'].max()
+
+# sort df2 by frequency
+df2 = df2.sort_values(by='frequency_hz').reset_index(drop=True)
+
+
+# all df2 with amplitudes greater than their neighbors
+# Identify peaks in df2
+df2_peaks = df2[(df2['amplitude'] > df2['amplitude'].shift(1)) & 
+                (df2['amplitude'] > df2['amplitude'].shift(-1))]
+
+df2_peaks['decomp'] = 5
+
+print("Peaks in df2:")
+for idx, row in df2_peaks.iterrows():
+    print(f"Frequency: {row['frequency_hz']:.2f} Hz, Amplitude: {row['amplitude_db']:.2f} dB")
+
+
+# df1 = pd.concat([df1, df2], ignore_index=True)
+# df1 = pd.concat([df1, df2_peaks], ignore_index=True)
+
 # Main scatter plot
 scatter = plt.scatter(df['frequency_hz'], df['amplitude_db'], c=df['decomp'], 
                       cmap='viridis',
-                     s=5, alpha=0.4, label='All components')
+                     s=4, alpha=0.4, label=df['decomp'], )
+plt.colorbar(scatter, label='decomp')
 
 # Different colors for each fundamental and its harmonics
-colors = ['r', 'g', 'b', 'c', 'm']
+# colors = ['r', 'g', 'b', 'c', 'm']
 for i, (_, row) in enumerate(top_5.iterrows()):
     f0 = row['frequency_hz']
     # Plot the fundamental
-    plt.scatter(f0, row['amplitude_db'], 
-               color=colors[i], s=100, 
-               label=f'F{i+1}: {f0:.1f} Hz')
+    # plt.scatter(f0, row['amplitude_db'], 
+    #            color=colors[i], s=100, 
+    #            label=f'F{i+1}: {f0:.1f} Hz')
     
     # Plot harmonics
-    for n in range(2, 7):  # harmonics 2-7
-        harmonic_freq = f0 * n
-        plt.axvline(x=harmonic_freq, color=colors[i], 
-                   linestyle='--', alpha=0.6)
+    # for n in range(2, 7):  # harmonics 2-7
+    #     harmonic_freq = f0 * n
+    #     plt.axvline(x=harmonic_freq, color=colors[i], 
+    #                linestyle='--', alpha=0.6)
         
-    for n in range(2, 4):  # harmonics 2-7
-        harmonic_freq = f0 / n
-        plt.axvline(x=harmonic_freq, color=colors[i], 
-                   linestyle='--', alpha=0.2)
+    # for n in range(2, 4):  # harmonics 2-7
+    #     harmonic_freq = f0 / n
+    #     plt.axvline(x=harmonic_freq, color=colors[i], 
+    #                linestyle='--', alpha=0.2)
 
 plt.xscale('log')
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('Amplitude (dB)')
-plt.title('Frequency Spectrum with Harmonics of Top 5 Amplitudes')
+plt.title('Reconstructed Spectrum vs Original')
 plt.grid(True, alpha=0.3)
 plt.legend()
 

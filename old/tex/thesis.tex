@@ -1,0 +1,880 @@
+
+%% ================================================================%%
+%% thesis.tex - template for an honors thesis in mathematics       %%
+%% ================================================================%%
+%% Save this page to a file named "thesis.tex"                     %%
+%% ================================================================%%
+
+\documentclass[11pt,twoside]{report}
+
+% If you want to print single-sided, then to make the margins work
+% correctly, change the above line to
+%          \documentclass[11pt]{report}
+% (without the %, of course)
+
+
+
+% Import standard math macro packages
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,
+    urlcolor=blue,
+}
+
+\urlstyle{same}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{esvect}
+% Declare theorem types.  Add, subtract, and modify
+% as you wish.
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{dfn}[thm]{Definition}
+\newtheorem{definition}[thm]{Definition}
+\newtheorem{conj}{Conjecture}
+\newtheorem{obs}[thm]{Observation}
+\newtheorem{ex}{Exercise}[section]
+\newtheorem{example}[thm]{Example}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{claim}[thm]{Claim}
+\newtheorem{cla}[thm]{Claim}
+\newcommand{\w}{\omega}
+\DeclareMathOperator*{\argmax}{argmax}
+\numberwithin{thm}{section}
+\numberwithin{equation}{section}
+
+
+% Set margins and spacing.  Probably you shouldn't mess with these,
+% unless your printer isn't aligned quite the same as mine and the
+% margins are coming out wrong.  (At least 1.5 inches on binding side,
+% at least 1 inch on the other three sides.)
+
+\setlength{\evensidemargin}{0in}
+\setlength{\oddsidemargin}{0.5in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{0.2in}
+\setlength{\textheight}{8.6in}
+\setlength{\footnotesep}{14pt}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% IF YOUR PRINTER ISN'T CENTERING THE PAGES CORRECTLY: %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% the following lines adjust the vertical and horizontal
+% positioning of the entire page.
+% (As noted above, you want different margins on the right
+% and left, so when I say ``centering'' above, it
+% technically isn't horizonally centered.)
+% \voffset is how much to slide the text down the page.
+% \hoffset is how much to slide the text to the right on the page.
+% Either quantity can be negative.
+
+\setlength{\voffset}{-0.7in}
+\setlength{\hoffset}{0in}
+
+
+% User-defined macros.  Add, subtract, modify as you wish.
+
+\newcommand{\C}{{\mathbb{C}}}
+\newcommand{\F}{{\mathbb{F}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\PP}{{\mathbb{P}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+
+\newcommand{\cK}{{\mathcal{K}}}
+
+\newcommand{\fm}{{\mathfrak{m}}}
+\newcommand{\fo}{{\mathfrak{o}}}
+
+\newcommand{\Cp}{\C_p}
+\newcommand{\Cv}{\C_v}
+\newcommand{\Qp}{\Q_p}
+\newcommand{\Qpbar}{\bar{\Q}_p}
+\newcommand{\Dbar}{\overline{D}}
+\newcommand{\Rd}{\mathbb{R}^{d}}
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\la}{\left<}
+\newcommand{\ra}{\right>}
+
+
+% User-defined math operators.  Add, subtract, modify as you wish.
+
+\DeclareMathOperator{\rad}{rad}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\divop}{div}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
+% Let's get started %
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+
+% Set up double-spacing (must be done *after* \begin{document})
+
+\setlength{\baselineskip}{21pt}
+
+% Roman numeral page numbers for abstract, etc.
+
+\pagenumbering{roman}
+
+
+%%%%%%%%%%%%%%
+% Title page %
+%%%%%%%%%%%%%%
+
+\begin{titlepage}
+\mbox{}
+\vspace{1in}
+\begin{center}
+\LARGE A Windowless Approach to Spectral Leakage \\ \& \\Signal Decomposition Via Frequency Modulation Synthesis \\
+ [2in]
+\normalsize  Matthew McQuistion \\[\medskipamount]
+April 25th, 2025 \\[1in]
+Submitted to the \\
+Department of Applied Mathematics \\
+of Brown University  \\
+
+\end{center}
+\vfill
+\begin{center}
+Faculty Advisor: Professor Amalia Culiuc
+\end{center}
+\vfill
+\begin{center}
+Copyright \copyright\ 2025 Matthew McQuistion
+\end{center}
+\end{titlepage}
+
+
+%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+% Acknowledgements %
+%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
+% Table of contents %
+%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% If you also have a lot of figures
+% or tables, un-comment one or both
+% of the following lines to generate
+% a list of them.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\listoffigures
+%\listoftables
+
+
+%%%%%%%%%%%%%%%%%%%%
+% List of notation %
+%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{List of Notation}
+An important note to any readers with more of a mathematical background than one of signal processing is that certain words have completely different meanings across the two disciplines.\\
+
+Specifically, The "spectrum" of a signal in the context of this thesis refers to the components of its frequencies after a Fourier Transform. Similarly, "spectral" does not involve the Spectral Theorem or relate to eigenvalues/eigenvectors in any direct way. Furthermore, "harmonic" refers to any integer-multiple overtones of a fundamental frequency. Although these harmonics do originate from the harmonic series, connections to the broader field of harmonic analysis end there.
+
+\begin{tabular}{cp{\textwidth}}
+
+
+\end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Finish up front matter %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Some magic code to leave an extra blank page
+% if we are double-siding AND the front matter
+% ends on an odd-numbered page.
+% (Otherwise the even- and odd-side margins
+% will be backwards for the rest of the thesis.)
+
+\makeatletter
+\if@twoside \ifodd\value{page}
+\clearpage\mbox{}\thispagestyle{empty} \fi \fi
+\makeatother
+
+
+% Switch back to arabic page numbers AFTER the end of the current page.
+
+\clearpage
+\pagenumbering{arabic}
+
+\chapter*{Introduction}
+TODO
+
+\chapter{Background}
+\section{The Discrete Fourier Transform}
+Fourier analysis is an ubiquitous and powerful tool in mathematics, and at its root lies the Fourier series: a linear combination of sine and cosine functions of different frequencies that converges to another function defined in rectangular coordinates. \\
+
+The operation converting the original function into its Fourier series is called the (continuous) Fourier transform, $\mathcal{F}$, defined for all angular frequencies $\w \in \mathbb{R}$ as:
+$$\mathcal{F}(\w) = \int_{-\infty}^\infty f(t) e^{-i\w t}dx$$
+Note that angular frequency $\w = 2\pi\xi$ for some $\xi \in \mathbb{R}$. In other words, the Fourier transform evaluated for a particular frequency $\w$ can be interpreted as the convolution of the original function with the sine and cosine functions of that particular frequency. This comes from Euler's identity, which states that $e^{i\theta} = \cos\theta + i\sin\theta$. One of the most important properties of the Fourier transform is that it is invertible, meaning that one can apply an inverse Fourier transform to the Fourier series and obtain the original function.
+$$\textbf{TODO: TALK ABOUT CONVERGENCE}$$
+
+Although this method of computing the Fourier transform is incredibly useful in many branches of mathematics, modern computers cannot accurately represent continuous data. In order to analyze real-world signals using a computer, we must first discretize the data into a finite number of samples that approximate the continuous signal. However, this poses an issue: to use the Fourier transform above, we would need our data to be a continuous interval, not a finite collection of points. Another useful property of the Fourier transform (particularly in the study of partial differential equations) is that convolution in the time (rectangular) domain is equivalent to multiplication in the frequency domain, which is comparatively a far easier operation to work with and compute. \\
+
+The solution to this problem is to use the discrete Fourier transform (DFT), which converts a $N$ point sequence of complex numbers $\{\mathbf{x}_n\} := x_0, x_1, \dots, x_{N-1}$ into a new sequence of complex numbers $\{\mathbf{X}_k\} := X_0, X_1, \dots, X_{N-1}$ defined by:
+$$X_k = \sum_{n=0}^{N-1}x_n \cdot e^{-i2\pi\frac{k}{N}n}$$
+
+With a few notable exceptions (which will be explored later), the DFT behaves nearly identically to its continuous analogue, and the DFT is invertible and linear. Furthermore, the DFT can be computed with $\mathcal{O}(n\log n)$ time complexity thanks to the aptly named "Fast Fourier Transform" (FFT).
+
+\section{Frequency Modulation Synthesis}
+In 1967, Stanford researcher John Chowning developed a new method of synthesizing audio using a technique called frequency modulation (FM). In its most simple case, FM synthesis requires two oscillators, which each produce a tone at a given frequency in Hz. Instead of combining the oscillator outputs directly, we designate one as the "carrier" and one as the "modulator" and use the modulator's frequency $\w_m$ to modify the frequency parameter of the carrier $\w_c$ by an amount determined by the modulation index $\beta = B/\w_m$ where $B$ is the peak deviation from the original carrier. Mathematically, we can describe the instantaneous amplitude of the modulated carrier as:
+$$FM(t) = \sin(\w_ct + \beta \sin( \w_mt))$$
+This small change to how the two oscillators interact has a tremendous impact on the character (timbre) of the sound produced, being far richer and more complex than two oscillators arranged in parallel. The reason for this lies in the resulting spectrum\footnote{In Digital Signal Processing, "spectrum" refers to the corresponding Fourier series of a signal rather than its eigenvectors, which is the more common definition in most branches of mathematics} of FM synthesis. \\
+
+To better illustrate this, we can take the Fourier transform of this FM operator array with an added carrier amplitude $A$ and deviation $B$. First however, we must integrate the instantaneous frequency over all $t$:
+\begin{align*}
+    FM(t) &= A\sin(\w_ct + B \sin( \w_mt))\\
+    &= A\sin\bigg(\int_0^t (w_c + B\sin(w_m \tau))d\tau\bigg)\\
+    &= A\sin\bigg( w_ct - \frac{B}{w_m}(\cos(w_m t) - 1)\bigg)\\
+    &= A\sin\bigg( w_ct + \frac{B}{w_m}(\sin(w_m t - \pi/2) + 1)\bigg)
+\end{align*}
+Ignoring the constant phase terms on the carrier ($\varphi_c = \frac{B}{w_m}$) and the modulator ($\varphi_m = -\pi/2$), we get the same equation as before:
+\begin{align*}
+    FM(t) &\approx A\sin(w_c t + \beta \sin(w_m t))
+\end{align*}
+In order to take the Fourier transform, note that functions of the form $\sin(\beta\sin(\theta))$ have the Fourier series
+$$2\sum_{n=0}^\infty J_{2n+1}(\beta)\sin((2n+1)\theta)$$
+Where $J_n$ refers to the $n$-th Bessel function of the first kind. More generally, we can expand $A\sin(w_c t + \beta \sin(w_m t))$ in terms of its Fourier series as:\footnote{Music: A Mathematical Offering p. 51-52}
+$$A\sin(w_c t + \beta \sin(w_m t)) = \sum_{n=-\infty}^\infty J_n(\beta)\sin((w_c + nw_m)t)$$
+Notice that we have gone from each operator having a single term in its Fourier series to now having infinitely many. Furthermore, we must note two important properties of Bessel functions that emerge from its power series definition found by applying the Frobenius method to Bessel's equation:\footnote{ Abramowitz and Stegun \hyperlink{https://personal.math.ubc.ca/~cbm/aands/page_360.htm}{p. 360, 9.1.10}}
+$$J_A(x) = \sum_{m=0}^\infty\frac{(-1)^m}{m!\Gamma(m+A+1)}\left(\frac{x}{2}\right)^{2m+A}$$
+Where $\Gamma$ is the generalized factorial function. In practice, we will only use the discrete case for describing frequency modulation, which is simply the factorial function. \\
+
+The first observation is that $J_n$ is even for even $n$ and odd for odd $n$, meaning that for even terms, our spectrum is symmetric about the carrier and for odd terms, their magnitudes of their spectral coefficients are symmetric about the carrier. We call pairs of terms with summation indices $-n,n :n\neq 0$ "sidebands." The second crucial observation is that for larger values of $A$, the series converges to very small values because the gamma function in the denominator grows much faster than $x^A$. What this means is that even for large modulation indices $\beta$, there will always be sidebands for which further series terms have a negligible impact on the characteristics of the sound.
+
+$$\textbf{IMAGE: MODIFTY DESMOS GRAPH}$$
+
+\section{Fundamentals, Partials, and Timbre}
+"Concert Pitch" is the note to which instruments are tuned in an orchestral setting. The ISO defines this pitch to be A440, or A above middle C, which has a frequency of exactly 440.0Hz. Despite the fact that all instruments are tuned to match this, the actual sound that this note makes varies substantially between instruments. While the fundamental frequency, the lowest frequency of a periodic waveform, is 440Hz, the sound that a piano produces when A above middle C is played is far richer than a simple isolated sine wave corresponding to that fundamental. The reason for this is because of timbre, which describes the sound characteristics of instruments that go beyond the actual pitch of the note being played. Essentially, there is a fundamental "piano-ness" to any note played on a piano which uniquely identifies it as sounding like it was produced by that instrument. \\
+
+These timbral characteristics stem from the shape of the instrument, the physical properties of its material, and often the way in which a musician plays the note. From a mathematical perspective, however, timbre can be understood as phase-coherent partials of the fundamental frequency. Partials are individual sine waves that make up the overall sound, and they can be harmonic (falling on or close to a member of the fundamental's harmonic series, also called overtones) or inharmonic, meaning that they do not align well with the harmonic series. Most pitched instruments are designed specifically so that their partials are harmonic, while many percussive instruments have mostly inharmonic partials. \\
+
+$$\textbf{IMAGE: FFT OF PIANO VS GUITAR VS DRUM(?)}$$
+
+Importantly, partials are phase-coherent, which means that the phase of the sine wave corresponding to the fundamental lines up with the phase of the partials. This makes it much easier to identify partials based the fundamental by looking for spectral components at various integer multiples of the fundamental. In the context of FM synthesis, if we treat the carrier as a potential fundamental and only consider positive-indexed sidebands, we can model much more complicated timbres like those we might find in the real world. In part, this interaction served as the bedrock for Yamaha keyboards in the late 20th century, but has not been explored much in a more abstract mathematical sense for approximating signals.\\
+
+Given that Yamaha used FM operator arrays to model real instruments by trying to match the spectrum of their array with the timbre of another instrument, we can apply a similar approach to decompose complex signals into an FM representation. Not only does this allow us to analytically quantify timbre, but it allows us to do so with relatively simple mathematical objects that do not require much data to reconstruct.
+
+\chapter{FM Arithmetic and Complex Operators}
+A primary focus of this thesis is to analyze the properties and applications of frequency modulation in a more abstract mathematical context, as the interactions between pairs of FM operators exhibit interesting and useful behavior. First, we must define a "simple" FM operator array, which is defined by a carrier $c$, modulator $m$, modulation index $\beta$, and amplitude $A$.
+\section{The Structure of an FM Operator}
+TODO: Write about parts of operator\footnote{https://commons.wikimedia.org/wiki/File:2op\_FM.svg}
+\begin{align*}
+    \includegraphics[scale=0.2]{images/fm_operator_diagram_emptybkg.png}
+\end{align*}
+
+TODO: Talk about how parts of operator affect spectrum:\footnote{OG Chowning Paper: https://web.eecs.umich.edu/\~fessler/course/100/misc/chowning-73-tso.pdf}
+\begin{align*}
+    \includegraphics[scale=0.7]{images/FM_surface.png}
+\end{align*}
+Consider an FM operator array with amplitude $A$, carrier frequency $c$, modulator frequency $m$, and modulation index $\beta$. \\
+
+Let $FM(A, c, m, \beta) = A \sin(ct + \beta \sin(mt))$ denote the signal generated by this arbitrary FM operator array.\\
+
+Note that by its Fourier transform, $\displaystyle FM = A \sum_{n=-\infty}^\infty J_n(\beta) \sin((c + nm)t)$, where $J_n$ denotes the $n$-th Bessel function of the first kind.\\
+
+\section{Operator Composition and Composite Operators}
+\begin{lem} Adding two operator arrays with opposite-signed modulating frequencies removes odd harmonics and doubles the amplitudes of even harmonics.
+$$\displaystyle FM(A, c, m, \beta) + FM(A, c, -m, \beta) = 2A\sum_{n=-\infty}^\infty J_{2n}(\beta)\sin((c + 2nm)t)$$
+\end{lem}
+
+\begin{proof} First, we can write that by linearity of the Fourier transform, we have:
+\begin{align*}
+    FM(A, c, m, \beta) + FM(A, c, -m, \beta) &= \mathcal{F}(FM(A, c, m, \beta) + FM(A, c, -m, \beta)) \\
+    &= \mathcal{F}(FM(A, c, m, \beta)) + \mathcal{F}(FM(A, c, -m, \beta))\\
+    &=\Tilde{FM}(A, c, m, \beta) + \Tilde{FM}(A, c, -m, \beta)
+\end{align*}
+By definition of the Fourier transform of $FM$, we can expand this as:
+\begin{align*}
+    \Tilde{FM}(A, c, m, \beta) + \Tilde{FM}(A, c, -m, \beta) &= A \sum_{n=-\infty}^\infty J_n(\beta) \sin((c + nm)t) + A \sum_{n=-\infty}^\infty J_n(\beta) \sin((c + n(-m))t)\\
+    &= A \sum_{n=-\infty}^\infty J_n(\beta) \sin((c + nm)t) + A \sum_{n=-\infty}^\infty J_n(\beta) \sin((c - nm)t)
+\end{align*}
+Now, note that for even $n$, $J_n$ is even $\implies J_{2n}(-\beta) = J_{2n}(\beta)$ and for odd $n$ we have that $J_{n}$ is also odd $\implies J_{n}(-\beta) = -J_{n}(\beta)$.\\
+
+The absolute convergence of this series is fairly obvious, so we will omit the proof for it. \\
+
+Now, we will group the two sums into infinitely many sums of the $n$-th and $-n$-th indices from both $\tilde{FM}(A, c, m, \beta)$ and $\tilde{FM}(A, c, -m, \beta)$ as follows:
+\begin{align*}
+    A \sum_{n=-\infty}^\infty J_n(\beta) \sin((c + nm)t) + A \sum_{n=-\infty}^\infty J_n(\beta) \sin((c - nm)t) \\
+    = 2A J_0(\beta)\sin(ct) + A\sum_{n=1}^\infty [ J_{-n}(\beta)\sin((c-nm)t) + J_{n}(\beta)\sin((c+nm)t)  \\
+    + J_{-n}(\beta)\sin((c-n(-m))t) + J_{n}(\beta)\sin((c+n(-m))t) ]
+\end{align*}
+We now have two cases:\\
+For even $n = 2n$, we have:
+\begin{align*}
+    2A J_0(\beta)\sin(ct) + A\sum_{n=1}^\infty [ J_{-2n}(\beta)\sin((c-2nm)t) + J_{2n}(\beta)\sin((c+2nm)t)  \\
+    + J_{-2n}(\beta)\sin((c-2n(-m))t) + J_{2n}(\beta)\sin((c+2n(-m))t) ]\\
+    = 2A J_0(\beta)\sin(ct) + A\sum_{n=1}^\infty [ J_{2n}(\beta)\sin((c-2nm)t) + J_{2n}(\beta)\sin((c+2nm)t)  \\
+    + J_{2n}(\beta)\sin((c+2nm)t) + J_{2n}(\beta)\sin((c-2nm)t) ] \\
+    = 2A J_0(\beta)\sin(ct) + A\sum_{n=1}^\infty J_{2n}(\beta)[ \sin((c-2nm)t) \\
+    + \sin((c+2nm)t) + \sin((c+2nm)t) + \sin((c-2nm)t) ]\\
+    = 2A J_0(\beta)\sin(ct) + A\sum_{n=1}^\infty J_{2n}(\beta)[ 2\sin((c-2nm)t) + 2\sin((c+2nm)t) ]\\
+    = 2A J_0(\beta)\sin(ct) + 2A\sum_{n=1}^\infty J_{2n}(\beta)\sin((c-2nm)t) + 2A\sum_{n=1}^\infty J_{2n}(\beta)\sin((c+2nm)t)\\
+    = 2A \sum_{n=-\infty}^\infty J_{2n}(\beta)\sin((c + 2nm)t)
+\end{align*}
+However, for odd $n$, we have:
+\begin{align*}
+    A\sum_{n=1, 2\nmid n}^\infty [ J_{-n}(\beta)\sin((c-nm)t) + J_{n}(\beta)\sin((c+nm)t)  \\
+    + J_{-n}(\beta)\sin((c-n(-m))t) + J_{n}(\beta)\sin((c+n(-m))t) ]\\
+    = A\sum_{n=1, 2\nmid n}^\infty [ -J_{n}(\beta)\sin((c-nm)t) + J_{n}(\beta)\sin((c+nm)t)  \\
+    + -J_{n}(\beta)\sin((c+nm)t) + J_{n}(\beta)\sin((c-nm)t) ] \\
+    = A\sum_{n=1, 2\nmid n}^\infty [ \sin((c-nm)t)(J_{n}(\beta)-J_{n}(\beta)) + \sin((c+nm)t)(J_{n}(\beta) - J_{n}(\beta) ) \\
+    = A\sum_{n=1, 2\nmid n}^\infty [ \sin((c-nm)t)(0) + \sin((c+nm)t)0 ) \\
+    = A\sum_{n=1, 2\nmid n}^\infty 0 + 0 \\
+    = 0
+\end{align*}
+Combining both odd and even $n$, we get:
+\begin{align*}
+\Tilde{FM}(A, c, m, \beta) + \Tilde{FM}(A, c, -m, \beta) &= 2A J_0(\beta)\sin(ct) \\
+&+ A\sum_{n=1}^\infty [ J_{-n}(\beta)\sin((c-nm)t) + J_{n}(\beta)\sin((c+nm)t)  \\
+    &+ J_{-n}(\beta)\sin((c-n(-m))t) + J_{n}(\beta)\sin((c+n(-m))t) ]\\
+    &= 2A \sum_{n=-\infty}^\infty J_{2n}(\beta)\sin((c + 2nm)t) + 0 \\
+    &= 2A \sum_{n=-\infty}^\infty J_{2n}(\beta)\sin((c + 2nm)t)
+\end{align*}
+\end{proof}
+
+\begin{lem} Adding two operator arrays with opposite-signed carrier frequencies removes even harmonics and doubles the amplitudes of odd harmonics.
+$$\displaystyle FM(A, c, m, \beta) + FM(A, -c, m, \beta) = 2A\sum_{n=-\infty, 2\nmid n}^\infty J_{n}(\beta)\sin((c + nm)t)$$
+\end{lem}
+
+
+\begin{proof} This lemma follows from the first if we consider that because sine is odd:
+$$\sin(((-c) + nm)t) = \sin((nm -c)t) = \sin(-1(c - nm)) = -\sin(c - nm)$$
+$$= -\sin(c + n(-m))$$
+Hence, for even $n$, we have:
+\begin{align*}
+    J_{-2n}(\beta)\sin((c-2nm)t) + J_{2n}(\beta)\sin((c+2nm)t) \\
+    + J_{-2n}(\beta)\sin((-c-2nm)t) + J_{2n}(\beta)\sin((-c+2nm)t) \\
+     = J_{2n}(\beta)\sin((c-2nm)t) + J_{2n}(\beta)\sin((c+2nm)t) \\
+    + J_{2n}(\beta)\sin(-1(c+2nm)t) + J_{2n}(\beta)\sin(-1(c-2nm)t) \\
+    = J_{2n}(\beta)\sin((c-2nm)t) + J_{2n}(\beta)\sin((c+2nm)t) \\
+    - J_{2n}(\beta)\sin((c+2nm)t) - J_{2n}(\beta)\sin((c-2nm)t) \\
+    =\sin((c+2nm)t)(J_{2n}(\beta) - J_{2n}(\beta)) + \sin((c-2nm)t)(J_{2n}(\beta)- J_{2n}(\beta)) \\
+    =\sin((c+2nm)t)(0) + \sin((c-2nm)t)(0) \\
+    = 0
+\end{align*}
+And for odd $n$, we have:
+\begin{align*}
+    J_{-n}(\beta)\sin((c-nm)t) + J_{n}(\beta)\sin((c+nm)t) \\
+    + J_{-n}(\beta)\sin((-c-nm)t) + J_{n}(\beta)\sin((-c+nm)t) \\
+     = -J_{n}(\beta)\sin((c-nm)t) + J_{n}(\beta)\sin((c+nm)t) \\
+    - J_{n}(\beta)\sin(-1(c+nm)t) + J_{n}(\beta)\sin(-1(c-nm)t) \\
+    = - J_{n}(\beta)\sin((c-nm)t) + J_{n}(\beta)\sin((c+nm)t) \\
+    + J_{n}(\beta)\sin((c+nm)t) - J_{n}(\beta)\sin((c-nm)t) \\
+    =\sin((c+nm)t)(J_{n}(\beta) + J_{n}(\beta)) + \sin((c-nm)t)(J_{-n}(\beta) + J_{-n}(\beta)) \\
+    = 2J_{-n}(\beta)\sin((c+nm)t) + 2J_{n}(\beta)\sin((c+nm)t)
+\end{align*}
+As this must hold for all even and odd $n \in (-\infty, \infty)$, we can see that
+$$FM(A, c, m, \beta) + FM(A, -c, m, \beta) = 2A\sum_{n=-\infty, 2\nmid n}^\infty J_{n}(\beta)\sin((c + nm)t) $$
+\end{proof}
+\section{Amplitude Modulation (AM)}
+TODO: Into on AM Modulation
+TODO: Derive sidebands
+$$\textbf{IMAGE: FFT OF AM}$$
+\section{An Algorithm to Produce an Arbitrary Frequency Using Non-Trivial Operators}
+ Despite my best efforts, I cannot find an elegant way to do the algorithm with strictly FM operators; however, by adding in amplitude modulated operators (AM), single-frequencies have a nice representation.\\
+
+First, we define $AM(A, c, m) = \sin(m)\sin(c)$ to be a (phase-shifted) amplitude modulated signal with carrier frequency $c$ and modulating frequency $m$. Unlike how frequency modulated signals have infinitely many side bands, amplitude modulation always results in two side bands ($c-m, c+m$) which have the same magnitude as the carrier frequency. \\
+
+In other words,
+$$\mathcal{F}(AM(A, c, m)) = A(\sin(c - m) + \sin(c) + \sin(c + m))$$
+
+What this means is that we now have the ability to manipulate individual symmetric frequency bands from the FM operator through an AM operator.
+
+\begin{example} $f(t) = \sin(10\pi t)$
+\end{example}
+
+First, we start by defining the FM operator $FM_1(1,10\pi, m, \beta)$, where $m \in \mathbb{R}$ and $\beta : J_0(\beta) \neq \frac{1}{3} \in \mathbb{R}$.\\
+
+Now, recall from Lemma 1, that if we add an FM operator with a negated modulating frequency, $FM_2(1, 10\pi, -m, \beta)$ we get a frequency spectrum consisting of only even harmonics from $FM_1$ with their amplitudes doubled. Recall also that these amplitudes are non-negative. \\
+
+Hence, taking $FM_e = \frac{1}{2}(FM_1 + FM_2)$, we precisely get $FM_1$ without odd harmonics.\\
+
+Now, notice that for each $n$, we have a symmetric side bands $$FM_{e,n} = J_{-n}(\beta)\sin((c - nm)t) + J_{n}(\beta)\sin((c+nm)t)$$
+
+Now, define $AM_n(c, nm) = \sin(nm)\sin(c) = \sin((c - nm)t) + \sin(ct) + \sin((c+nm)t)$.\\
+
+For each $n$, we can take $FM_e - J_n(\beta)AM_n(10\pi, m)$ to remove both side bands corresponding to the original index $n$ while subtracting $J_n(\beta)$ from the amplitude of the carrier. \\
+
+Repeating for all $n \in [2, \infty) $, we are left with zero amplitudes for all $n \neq 0$, for which the carrier has amplitude $J_0(\beta) - J_2(\beta) - J_4(\beta) - ... - J_n(\beta) = J_0(\beta) - \sum_{n=1}^\infty J_{2n}(\beta)$.\\
+
+Given $1 = \sum_{n=-\infty}^\infty J_n(\beta) = J_0 + \sum{n=1} 2J_{2n} \; \forall \beta$, we can write:
+\begin{align*}
+    1 &= J_0(\beta) + \sum_{n=1}^\infty 2J_{2n}(\beta) \\
+    &= J_0(\beta) + 2\sum_{n=1}^\infty J_{2n}(\beta) \\
+    \implies 2\sum_{n=1}^\infty J_{2n}(\beta) &= 1 - J_0(\beta)\\
+    \implies \sum_{n=1}^\infty J_{2n}(\beta) &= \frac{1- J_0(\beta)}{2}
+\end{align*}
+Substituting back into the original expression, we have that the amplitude for $\sin(10\pi t)$ is:
+\begin{align*}
+    J_0(\beta) - \sum_{n=1}^\infty J_{2n}(\beta) &= J_0(\beta) - \frac{1- J_0(\beta)}{2}\\
+    &= \frac{2J_0(\beta) - 1 + J_0(\beta)}{2}\\
+    &= \frac{3J_0(\beta) - 1}{2}
+\end{align*}
+
+Therefore, given $\beta : 3J_0(\beta) \neq 1 \implies \beta \not\approx 1.81144$, if we multiply the result \\
+$$FM_e - \sum_{n=1}^\infty J_{2n}(\beta)AM_{2n}(10\pi, nm)$$
+by $\displaystyle\frac{2}{3J_0(\beta) - 1}$, we have:
+\begin{align*}
+    \frac{2}{3J_0(\beta) - 1}\left(FM_e - \sum_{n=1}^\infty J_{2n}(\beta)AM_{2n}(10\pi, nm)\right) &= \frac{2}{3J_0(\beta) - 1}\left(\frac{3J_0(\beta) - 1}{2}\sin(10\pi t)\right)\\
+    &= \sin(10\pi t)
+\end{align*}
+
+
+\chapter{A Windowless Approach to Spectral Leakage}
+
+\section{Spectral Leakage and The Dirichlet Kernel}
+One of the most relevant properties of the Fourier transform is that the operation of convolution in regular coordinate space is equivalent to multiplication after one has taken the Fourier transform. The advantage of this is that it is often much easier/more computationally efficient to compute a Fourier transform of two functions than it is to perform their convolution. \\
+
+However, when working in the discrete case, this property has consequences that do not always apply to the continuous Fourier transform. When dealing with a finite number of ($N$) DFT samples, one implicitly applies a rectangular windowing function of length $N$ to the original function. This happens because trigonometric functions like sine and cosine go on forever, whereas a discrete function described by a finite number of samples does not. As a result, taking the DFT is essentially trying to do two things: first, to decompose the original function into sinusoidal components within the $N$-point domain; and second, to evaluate to zero for all  the actual values that the DFT takes on get 'smeared' out by the Fourier transform of that window function called the Dirichlet Kernel–a phenomenon called "spectral leakage."\\
+
+TODO: Should we prove this or cite it???\\
+
+\begin{align*}
+    \includegraphics[scale=0.8]{images/flat_spectral_leakage.png}
+\end{align*}
+\begin{align*}
+    \includegraphics[scale=0.75]{images/off_axis_spectral_leakage.png}
+\end{align*}
+
+An interesting property of this spectral leakage is that for any given component, the amount of smearing relative to the magnitude of its true frequency only depends on the underlying sampling frequency and the true frequency itself. Another consequence of using a finite number of points in a DFT is that you must give up perfect frequency resolution; instead, nearby frequencies are summed into "bins" for which their widths $T$ are given by:
+$$T = \frac{N}{f_s}$$
+Where $T$ is the interval width, $N$ is the number of samples, and $f_s$ is the sample rate (samples / second). Now, let $\omega_k = \frac{2\pi}{NT}k$ where $k$ corresponds to a bin but does not need to take on integer values. With this, we can observe that as the formula for the spectral rectangular window (Dirichlet kernel) of an $N$-point DFT is given by:\footnote{MIT paper}
+$$W(\omega) = \exp{\left(-i\frac{\omega T}{2}\right)}\frac{\displaystyle\sin{\left[\frac{N}{2}\omega T \right]}}{\displaystyle\sin{\left[\frac{1}{2}\omega T \right]}}$$
+
+We can rewrite this in terms of a bin's frequency offset from the true frequency $f$ (expressed as a fractional bin) as $\omega_d = \omega_k - \frac{2\pi}{NT}*f = \frac{2\pi}{NT}(k - f)$. Substituting this in for $\omega$, we have:
+\begin{align*}
+    W(\omega_d) &= \exp{\left(-i\frac{\frac{2\pi}{NT}(k-f) T}{2}\right)}\frac{\displaystyle\sin{\left[\frac{N}{2}\frac{2\pi}{NT}(k-f) T \right]}}{\displaystyle\sin{\left[\frac{1}{2}\frac{2\pi}{NT}(k-f) T \right]}} \\
+    &=\exp{\left(-i\frac{\pi (k-f)}{N}\right)}\frac{\sin{\left[\pi (k-f) \right]}}{\sin{\left[\frac{\pi (k-f)}{N} \right]}} \\
+\end{align*}
+Thus, we can see that for any integer difference between a bin frequency $\omega_k$ and any true frequency $\omega_f$, we can write
+$$k-f \in \mathbb{Z} \implies \sin{\left(\pi (k-f)\right)} = 0 \implies W(\omega_d) = 0$$
+This means that the frequency response of the Dirichlet kernel for all true frequencies that are an integer multiple of the sample frequency is zero. In practice however, this is fairly uncommon.\\
+
+In consequence, if a true frequency falls perfectly between two bins, those bins will have the exact same response. Not only does this configuration maximize leakage,\footnote{find an image or citation} but because of the steep drop-off of the kernels frequency response, the magnitude of these bins will be far smaller than the ideal true magnitude. This issue of magnitudes is also true for all frequencies for which the sample rate does not evenly divide.
+
+$$\textbf{GRAB IMAGE FROM DSP STACK EXCHANGE}$$\\
+
+\section{Window Functions}
+
+s a result of the many problems that arise from the Dirichlet kernel, the use of other window functions other than the rectangular window are commonly used because they have better frequency-domain properties at the cost of a wider main lobe. The most common of these are the Hamming, Hann, and Triangle (Fejer-Bartlet) window functions.\footnote{Cite}\\
+
+$$\textbf{MAIN WINDOWS AND THEIR RESPONSES}$$\\
+
+Although window functions are extremely helpful they are still prone to a number of issues. Firstly, they are not completely free of spectral leakage, these windows just have more energy around the peak (albeit with a much wider central lobe). The second issue, which serves as a major impetus for this thesis, is that they are lossy, meaning that the original signal cannot be perfectly reconstructed after applying the window functions. In fact, the rectangular (Dirichlet) window is the only window function from which the original signal can be perfectly reconstructed.\footnote{TODO: Need footnote}
+
+TODO: More research/Motivation for why you might not want a window function
+
+\chapter{Dirichlet Kernel Deconvolution}
+Although the nature of frequency bins means that in principle we cannot know the exact frequency and phase of a given component in the DFT, the spectral leakage caused by the Dirichlet kernel is known and uniquely determined by a component's true frequency offset relative to the center of the bin.\footnote{THIS NEEDS A SOURCE OR DERIVATION} As such, we can work backwards from the DFT and decompose it into a set of true frequencies and phases. \\
+
+\section{Mathematical Foundations}
+\label{subsec:mathematical_foundations}
+
+The Dirichlet Kernel Deconvolution (DKD) method addresses a fundamental inverse problem in signal processing. Given a finite-length discrete Fourier transform $\mathbf{F} = \text{DFT}(S)$ of signal $S$, we seek to decompose it into a set of components with precise frequencies, phases, and amplitudes that transcend the resolution limitations of the standard DFT.
+
+Consider a signal composed of $M$ sinusoidal components. Its theoretical continuous Fourier series can be expressed as:
+
+\begin{equation}
+\label{eq:continuous_signal}
+S(t) = \sum_{i=1}^{M} A_i \sin(2\pi f_i t + \varphi_i)
+\end{equation}
+
+where $A_i$, $f_i$, and $\varphi_i$ represent the amplitude, frequency, and phase of each component, respectively. When we sample this signal at frequency $f_s$ over $N$ points and compute its DFT, we obtain discrete frequency bins $\mathbf{F}_k$ that do not precisely match the true component frequencies due to spectral leakage.
+
+This leakage follows a specific pattern determined by the Dirichlet kernel, which can be expressed for a specific frequency $f$ (in fractional bin units) and phase $\varphi$ as:
+
+\begin{equation}
+\label{eq:dirichlet_kernel}
+D(f, \varphi)_k = \frac{\sin[\pi (f - k)]}{\sin[\pi (f - k)/N]} e^{-j(\pi (f - k) + \varphi)}
+\end{equation}
+
+where $k$ represents the bin index. For each component with parameters $(A_i, f_i, \varphi_i)$, the Dirichlet kernel generates a specific pattern of energy distribution across multiple DFT bins.
+
+The DKD algorithm approaches this as a sparse approximation problem, seeking to find the minimal set of components $\{(A_i^*, f_i^*, \varphi_i^*)\}_{i=1}^M$ such that:
+
+\begin{equation}
+\label{eq:sparse_approximation}
+\mathbf{F} \approx \sum_{i=1}^{M} A_i^* D(f_i^*, \varphi_i^*)
+\end{equation}
+
+To solve this problem, we employ an iterative greedy approach similar to the CLEAN algorithm used in radio astronomy.
+\footnote{
+aanda (see comment)
+%https://www.aanda.org/articles/aa/full_html/2009/22/aa12148-09/aa12148-09.html
+}.
+We progressively identify and remove the component with the highest magnitude contribution to the residual spectrum.
+
+\subsection{Spectral Properties of the Dirichlet Kernel}
+
+To understand why our approach selects the bin with the highest magnitude, we must analyze the spectral properties of the Dirichlet kernel. The spectral window for the Dirichlet kernel under an $N$-point DFT is given by:
+
+\begin{equation}
+\label{eq:dirichlet_window}
+W(\theta) = \exp\left(-i\frac{N-1}{2}\theta\right)\frac{\sin\left[\frac{N}{2}\theta\right]}{\sin\left[\frac{1}{2}\theta\right]}
+\end{equation}
+
+In terms of fractional bins where $\theta_k = \frac{2\pi}{NT}k$, we can rewrite this as:
+
+\begin{align}
+\label{eq:dirichlet_window_fractional}
+W(kT) &= \exp\left(-i\frac{N-1}{2}\frac{2\pi}{NT}kT\right)\frac{\sin\left[\frac{N}{2}\frac{2\pi}{NT}kT\right]}{\sin\left[\frac{1}{2}\frac{2\pi}{NT}kT\right]}\\
+&= \exp\left(-i\left[\frac{N}{2}\frac{2\pi}{NT}kT + \frac{1}{2}\frac{2\pi}{NT}kT\right]\right)\frac{\sin\left[\frac{N}{2}\frac{2\pi}{NT}kT\right]}{\sin\left[\frac{1}{2}\frac{2\pi}{NT}kT\right]} \\
+&= \exp\left(-i\left[\pi k + \frac{\pi k}{N}\right]\right)\frac{\sin\left[\pi k\right]}{\sin\left[\frac{\pi k}{N}\right]}
+\end{align}
+
+By Euler's formula, we can express this in terms of its real and imaginary components:
+
+\begin{equation}
+\label{eq:dirichlet_complex}
+W(kT) = \frac{\sin\left[\pi k\right]}{\sin\left[\frac{\pi k}{N}\right]}\left(\cos\left[\pi k + \frac{\pi k}{N}\right] - i\sin\left[\pi k + \frac{\pi k}{N}\right]\right)
+\end{equation}
+
+The magnitude of this complex response is given by:
+
+\begin{align}
+\label{eq:dirichlet_magnitude}
+\|W(kT)\|_2 &= \left|\frac{\sin\left[\pi k\right]}{\sin\left[\frac{\pi k}{N}\right]}\right| \sqrt{\cos^2\left[\pi k + \frac{\pi k}{N}\right] + \sin^2\left[\pi k + \frac{\pi k}{N}\right]} \\
+&= \left|\frac{\sin\left[\pi k\right]}{\sin\left[\frac{\pi k}{N}\right]}\right|
+\end{align}
+
+where we have applied the Pythagorean identity in the final step.
+
+For a true frequency that aligns exactly with a bin ($k = 0$), we have:
+
+\begin{equation}
+\label{eq:dirichlet_at_zero}
+\lim_{k\to 0} \left|\frac{\sin\left[\pi k\right]}{\sin\left[\frac{\pi k}{N}\right]}\right| = N
+\end{equation}
+
+Furthermore, as $k$ increases, the magnitude of the Dirichlet kernel decreases. Specifically:
+
+\begin{equation}
+\label{eq:dirichlet_bounds}
+0 \leq \left|\frac{\sin\left[\pi k\right]}{\sin\left[\frac{\pi k}{N}\right]}\right| \leq \frac{1}{\left|\sin\left[\frac{\pi k}{N}\right]\right|}
+\end{equation}
+Since $|\sin x|$ is strictly increasing on the interval $(0, \frac{\pi}{2})$, we know that $\frac{1}{\left|\sin\left[\frac{\pi k}{N}\right]\right|}$ must be decreasing on that same interval.
+
+For each bin $m$ away from the true frequency, the fractional bin offset increases consistently by 1. Given that $|\sin[\pi(m + k)]| = |\sin[\pi m + \pi k]| = |\sin[\pi k]|$ for all $m \in \mathbb{Z}$, the amplitude at each subsequent bin is strictly decreasing as we move away from the true frequency.
+
+The one caveat is if the true frequency falls exactly between two bins, in which case the Dirichlet kernel response will be identical for these two bins. This, however, is not problematic for the algorithm, as the true frequency will still be found by the correlation search on the interval $[i-0.5, i+0.5]$ as long as we include the boundaries.
+
+\subsection{Component Extraction Process}
+
+For each iteration, we identify the bin $i$ with maximum magnitude in the current residual:
+
+\begin{equation}
+\label{eq:peak_bin}
+i = \underset{\text{bin} \in [1, N/2-1]}{\mathrm{argmax}}\ \|\mathbf{R}_{\text{bin}}\|_2 = \underset{\text{bin}}{\mathrm{argmax}}\ \sqrt{\Re(\mathbf{R}_{\text{bin}})^2 + \Im(\mathbf{R}_{\text{bin}})^2}
+\end{equation}
+
+Based on the aforementioned properties of the Dirichlet kernel, we know that the true frequency of the dominant component will be within $\pm 0.5$ bins (or $\pm f_s/(2N)$ Hz) of the selected bin $i$.
+
+To determine the precise frequency, we define a candidate frequency $f_i' = i + \varepsilon_i$, where $\varepsilon_i \in [-0.5, 0.5]$ is a fractional bin offset. The optimal offset $\varepsilon_i^*$ is found by maximizing the normalized cross-correlation:
+
+\begin{equation}
+\label{eq:optimal_freq}
+\varepsilon_i^* = \argmax_{\varepsilon_i \in [-0.5, 0.5]} \left\{ \frac{\left|\sum_{k=i-\ell_f}^{i+\ell_f} \mathbf{R}_k \cdot \overline{D(i + \varepsilon_i, \varphi_i)_k}\right|}{\|\mathbf{R}_{[i-\ell_f, i+\ell_f]}\|_2 \cdot \|D(i + \varepsilon_i, \varphi_i)_{[i-\ell_f, i+\ell_f]}\|_2} \right\}
+\end{equation}
+
+where $\ell_f$ defines a limited correlation window around bin $i$ and $\varphi_i$ is the initial phase estimate.
+
+Similarly, the optimal phase $\varphi_i^*$ is determined by:
+
+\begin{equation}
+\label{eq:optimal_phase}
+\varphi_i^* = \argmax_{\varphi \in [-\pi, \pi]} \left\{ \frac{\Re\left(\sum_{k=i-\ell_\varphi}^{i+\ell_\varphi} \mathbf{R}_k \cdot \overline{D(i + \varepsilon_i^*, \varphi)_k}\right)}{\|\mathbf{R}_{[i-\ell_\varphi, i+\ell_\varphi]}\|_2 \cdot \|D(i + \varepsilon_i^*, \varphi)_{[i-\ell_\varphi, i+\ell_\varphi]}\|_2} \right\}
+\end{equation}
+
+Finally, the true amplitude is calculated by applying a correction factor that accounts for spectral leakage:
+
+\begin{equation}
+\label{eq:amplitude_correction}
+A_i^* = A_i \cdot \frac{\sin[\pi \varepsilon_i^*/N]}{\sin[\pi \varepsilon_i^*]}
+\end{equation}
+
+where $A_i$ is the observed amplitude at bin $i$. This process is repeated iteratively until a termination condition is met, resulting in a set of components that accurately represent the original signal.
+
+\section{DKD: Single Threaded}
+
+
+\subsection{Algorithm Implementation}
+\label{subsec:algorithm_implementation}
+
+The implementation of the DKD algorithm builds directly upon the mathematical foundations established in Section~\ref{subsec:mathematical_foundations}. Here, we detail the complete control flow and computational procedure of the algorithm.
+
+\subsubsection{Initialization and Preprocessing}
+
+The control flow for Dirichlet kernel deconvolution begins by reading an input waveform file and computing its FFT using a modified implementation of the \texttt{dr\_wav} library. From this process, we extract the FFT size $N$ and sample rate $f_s$, which are automatically determined from the file metadata.
+
+Before the main decomposition routine begins, we perform several crucial preprocessing steps:
+
+\begin{enumerate}
+    \item Copy the first $N/2$ bins from the FFT vector into a new residual vector $\mathbf{R}$.
+    \item Set the first index in the residual to zero: $\mathbf{R}_0 = 0$.
+\end{enumerate}
+
+We restrict the analysis to the first $N/2$ bins because the DFT is self-adjoint about the Nyquist bin—the FFT bin corresponding to the signal's Nyquist frequency. According to the Nyquist-Shannon Sampling Theorem, a signal cannot contain frequency components above half the sampling rate if it is to be perfectly reconstructed. For the signals analyzed in this study (typically sampled at 48 kHz or 44.1 kHz), the Nyquist bin represents frequency content at exactly $f_s/2$.
+
+The information contained in the latter half of the FFT is essentially redundant due to this symmetry property, with a few exceptions related to cross-Nyquist reflections that will be addressed later. By operating only on the first $N/2$ bins, we substantially improve algorithmic efficiency, noting that we must take the spectrum's conjugate during reconstruction.
+
+We set the DC component ($\mathbf{R}_0$) to zero because it corresponds to the average value of the signal and can be handled separately from the spectral decomposition process.
+
+\subsubsection{Main Decomposition Loop}
+
+After initializing the residual vector, we proceed with the main iterative loop:
+
+\begin{enumerate}
+    \item Identify the bin index $i$ with the highest magnitude in the current residual:
+    \begin{equation}
+    i = \argmax_{\text{bin} \in [1, N/2-1]} \|\mathbf{R}_{\text{bin}}\|_2
+    \end{equation}
+
+    \item Check termination conditions: if the maximum magnitude falls below a threshold $\epsilon$ or the maximum number of components $M_{\max}$ is reached, exit the loop.
+
+    \item For the identified peak bin $i$, perform frequency optimization to find the precise fractional bin frequency $f_i^* = i + \varepsilon_i^*$ that maximizes the cross-correlation between the Dirichlet kernel and the residual.
+
+    \item Using the optimized frequency $f_i^*$, perform phase optimization to find $\varphi_i^*$.
+
+    \item Calculate the true amplitude $A_i^*$ using the correction factor from Equation~\ref{eq:amplitude_correction}.
+
+    \item Store the extracted component parameters $(A_i^*, f_i^*, \varphi_i^*)$ for later reconstruction.
+
+    \item Update the residual by subtracting the Dirichlet kernel response of the extracted component:
+    \begin{equation}
+    \mathbf{R}_k = \mathbf{R}_k - A_i^* \cdot D(f_i^*, \varphi_i^*)_k \quad \forall k \in [1, N/2-1]
+    \end{equation}
+
+    \item Return to step 1 and repeat until termination conditions are met.
+\end{enumerate}
+
+\begin{align*}
+    \includegraphics[scale=0.225]{images/DKD_ST_CF.png}
+\end{align*}
+
+This iterative approach progressively refines the residual, extracting components in order of their energy contribution to the signal.
+
+\subsection{Golden Section Search}
+\label{subsubsec:golden_section_search}
+
+Rather than evaluating all possible fractional bin offsets, we employ golden section search \footnote{NEEDS SOURCE} to efficiently find the optimal frequency and phase. The golden section search is particularly well-suited for this problem for several reasons:
+
+\begin{enumerate}
+    \item The cross-correlation function has a single maximum in the interval $[-0.5, 0.5]$ for frequency optimization.
+    \item The function is relatively smooth but lacks a simple analytical derivative.
+    \item The method converges logarithmically, offering substantial computational savings over grid search.
+\end{enumerate}
+
+The golden section search algorithm exploits the golden ratio $\varphi \approx 1.618033988749895$ to optimally partition the search interval:
+
+\begin{enumerate}
+    \item Initialize search interval $[a, b] = [i-0.5, i+0.5]$ for frequency optimization.
+    \item Calculate interior points $c = b - (b - a)/\varphi$ and $d = a + (b - a)/\varphi$.
+    \item Evaluate the objective function (normalized cross-correlation) at points $c$ and $d$.
+    \item If $f(c) > f(d)$, set $b = d$; otherwise, set $a = c$.
+    \item Repeat until the interval width $|b - a|$ is below the tolerance threshold $\epsilon_{\text{GSS}}$.
+\end{enumerate}
+
+This approach reduces the complexity from $O(N \cdot K)$ to $O(N \cdot \log K)$, where $K$ is the number of candidate values that would be evaluated in a grid search.
+
+\subsection{Determining Optimal Parameters}
+\label{subsubsec:determining_optimal_parameters}
+
+The performance of the DKD algorithm depends on several key parameters:
+
+\begin{enumerate}
+    \item Frequency correlation window size ($\ell_f$): Controls the number of bins considered when optimizing frequency.
+    \item Phase correlation window size ($\ell_\varphi$): Controls the number of bins considered when optimizing phase.
+    \item Golden section search tolerance ($\epsilon_{\text{GSS}}$): Determines the precision of frequency and phase optimization.
+    \item Maximum component count ($M_{\max}$): Limits the total number of components extracted.
+    \item Residual threshold ($\epsilon_{\text{res}}$): Determines when to terminate the extraction process based on residual energy.
+\end{enumerate}
+
+Through empirical testing, we have determined optimal values for these parameters:
+
+\begin{enumerate}
+    \item $\ell_f = 10$: This provides sufficient context to accurately determine frequency while limiting computational overhead.
+    \item $\ell_\varphi = 9$: A slightly smaller window is sufficient for phase optimization since frequency has already been determined.
+    \item $\epsilon_{\text{GSS}} = 10^{-6}$: This provides sub-millihertz frequency precision for typical sample rates.
+    \item $M_{\max} = 20000$: This upper bound is usage specific, but for a complex, multi-source audio signal of 3s at 48kHz, 20K corresponds to a 99.9\% total magnitude capture.
+    \item $\epsilon_{\text{res}} = 10^{-6} \cdot E_{\text{total}}$: The algorithm terminates when the residual energy falls below one-millionth of the initial total energy. (Determined experimentally by running DKD with $M_{\max}=1$ on signals composed of a single sine wave)
+\end{enumerate}
+
+These values represent a balance between accuracy and computational efficiency. For signals with very closely spaced frequency components, larger correlation windows may be beneficial, while simpler signals may permit smaller windows without loss of accuracy.
+
+\subsection{Cross-Nyquist Kernel Reflections}
+\label{subsubsec:cross_nyquist_kernel_reflections}
+
+A critical aspect of the DKD algorithm is proper handling of frequencies near the Nyquist boundary. When a component has frequency content that approaches the Nyquist frequency, its spectral leakage pattern reflects across the Nyquist boundary, creating mirrored contributions in the spectrum.
+
+For each component with parameters $(A_i^*, f_i^*, \varphi_i^*)$, we must consider both its direct contribution to the spectrum and its reflection. The reflection appears at bin $N-k$ for each bin $k$ and has conjugate-symmetric properties.
+$$\textbf{NEED IMAGE}$$
+
+During the residual update step, we explicitly handle these reflections:
+
+\begin{equation}
+\mathbf{R}_{N-k} = \overline{\mathbf{R}_k} \quad \forall k \in [1, N/2-1]
+\end{equation}
+
+This ensures that the conjugate symmetry property of the DFT is maintained, which is essential for the reconstructed signal to remain real-valued. Without proper cross-Nyquist handling, components near the Nyquist frequency would be incorrectly estimated, leading to artifacts in both the decomposition and reconstruction.
+
+\subsection{Reconstruction}
+\label{subsubsec:reconstruction}
+
+Once we have extracted a set of components $\{(A_i^*, f_i^*, \varphi_i^*)\}_{i=1}^M$, we can reconstruct the original signal in either the frequency or time domain.
+
+For frequency-domain reconstruction, we generate a synthetic spectrum by summing the Dirichlet kernel responses for all components:
+
+\begin{equation}
+\mathbf{F}_{\text{recon},k} = \sum_{i=1}^{M} A_i^* \cdot D(f_i^*, \varphi_i^*)_k \quad \forall k \in [0, N-1]
+\end{equation}
+
+Ensuring conjugate symmetry across the Nyquist boundary:
+
+\begin{equation}
+\mathbf{F}_{\text{recon},N-k} = \overline{\mathbf{F}_{\text{recon},k}} \quad \forall k \in [1, N/2-1]
+\end{equation}
+
+The reconstructed time-domain signal is then obtained by applying the inverse DFT:
+
+\begin{equation}
+S_{\text{recon}}(t) = \text{IDFT}(\mathbf{F}_{\text{recon}})
+\end{equation}
+
+Alternatively, for time-domain reconstruction, we can directly synthesize the signal using the extracted parameters:
+
+\begin{equation}
+S_{\text{recon}}(t) = \sum_{i=1}^{M} A_i^* \sin(2\pi \frac{f_i^* f_s}{N} t + \varphi_i^*)
+\end{equation}
+
+where $f_s$ is the sampling frequency and $\frac{f_i^* f_s}{N}$ converts the fractional bin frequency to Hz.
+
+The reconstructed signal provides a cleaned version of the original, with only the most significant components retained. This can be valuable for applications such as noise reduction, compression, and signal analysis.
+
+\subsection{Complexity Analysis}
+
+The overall time complexity of the single-threaded DKD algorithm is $O(M \cdot N \cdot \ell \cdot \log K)$, where:
+\begin{itemize}
+    \item $M$ is the number of components extracted
+    \item $N$ is the FFT size
+    \item $\ell$ is the correlation window size
+    \item $K$ is the precision of the frequency/phase search (determined by $\epsilon_{\text{GSS}}$)
+\end{itemize}
+
+The space complexity is $O(N + M)$, which accounts for the residual spectrum and the storage of extracted components.
+
+This represents a significant improvement over naive approaches that would require $O(M \cdot N^2 \cdot K)$ operations. The key optimizations that enable this performance are:
+\begin{enumerate}
+    \item Limited correlation windows ($\ell \ll N$)
+    \item Golden section search ($\log K$ instead of $K$ evaluations)
+    \item Working with only the first $N/2$ bins due to conjugate symmetry
+\end{enumerate}
+
+In practice, the algorithm's performance is also influenced by implementation details such as cache efficiency, vectorization, and memory access patterns. These considerations become increasingly important for large FFT sizes.
+
+\section{DKD: Multiple Threads}
+\subsection{Control Flow}
+\subsection{Spectral Distance}
+\subsection{Hyperparameter Evaluation}
+\section{DKD: Results}
+\subsection{Performance Evaluation}
+$$\textbf{IMAGE OF SIMPLE SINE WAVE ALONG WITH RECONSTRUCTION}$$
+$$\textbf{IMAGE OF MORE COMPLICATED AT DIFFERENT COMPONENT LEVELS}$$
+\subsection{Error Evaluation}
+\subsection{Runtime Analysis}
+
+\section{DKD: Potential Improvements}
+\chapter{Dirichlet Kernel Deconvolution: Applications}
+
+\section{Idealized Frequency Domain Resampling}
+\section{Cleaned Short-Time Fourier Transform (CSTFT)}
+\section{Compression of Simple Signals}
+\section{Stochastic Noise Reduction}
+
+\chapter{CleanFM: Spectral Signal Decomposition with FM Operators}
+\section{Motivation}
+\section{Timbral Coherence Decomposition (TCD)}
+\section{FM Orthogonal Pursuit (FMOP)}
+\section{Algorithm: CleanFM - Introduction \& Outline}
+\section{Algorithm: CleanFM - Analysis}
+
+\section{Application: Timbral Compression}
+\section{Application: Machine Learning}
+
+
+\chapter{CleanFM: Applications}
+\section{Timbral Decomposition and Analysis}
+\section{FM as a Compression Scheme}
+\section{Applications to Machine Learning}
+
+\chapter{Appendix}
+\section{Algorithm: Deconvolution (CLEAN) - Code}
+\section{Algorithm: Dirichlet Resampling - Code}
+\section{Algorithm: CleanFM - Code}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Force LaTeX to list the bibliography in the table of contents.
+
+\clearpage
+\addcontentsline{toc}{chapter}{\protect\numberline{}{Bibliography}}
+
+
+% Now the actual bibliography:
+
+\bibliography{bibfile}
+\bibliographystyle{alpha}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Corrections
+%
+% This section should NOT be part of the
+% original thesis.  It is only part of the
+% corrected version, to be handed in by
+% the second-to-last day of classes.
+%
+% So AFTER you hand in your thesis,
+% un-comment the lines below and follow
+% them with corrections, preferably in the
+% style found in samplethesis.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+\end{document}

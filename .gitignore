@@ -4,3 +4,4 @@ build/*
 tex/*
 
 *.csv
+*.png
