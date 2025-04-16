@@ -45,6 +45,7 @@ df1 = df.copy()
 audio_path = '../examples/test_runtime/TEST_2s.wav'
 
 y, sr = librosa.load(audio_path, sr=48000, mono=False)
+test_audio = y.copy()
 N = len(y[0])
 print(N)
 print(y.shape)
@@ -59,7 +60,7 @@ fft = fft
 # normalize fft
 
 magnitude = np.abs(fft)
-print("MAGNITUDE: ")
+print("MAGNITUDE:xq ")
 print(np.max(magnitude))
 #normalize magnitude
 max_val = np.max(magnitude)
@@ -209,8 +210,16 @@ plt.show()
 
 df = pd.concat([df, df2], ignore_index=True)
 
-audio_path = '../examples/test_runtime/TEST_2s.wav'
+audio_path = '../test_dc.wav'
 y, sr = librosa.load(audio_path, sr=48000, mono=True)
+
+recon_audio = y.copy()
+
+diff_audio= test_audio - recon_audio
+# write the diff audio to a file
+sf.write('../diff_audio.wav', diff_audio, 48000)
+exit()
+
 
 fft = np.fft.fft(y)
 
