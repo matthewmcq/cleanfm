@@ -22,11 +22,36 @@ modulator = 90
 MOD_INDEX = 0.5
 # signal = np.sin(2*np.pi * (1234) *t) + np.sin(2*np.pi * (1234 + modulator) *t)
 # signal = np.sin(2*np.pi * (0) *t  + (np.sin(2*np.pi*(98)*t + 0.2725972 * np.sin(2*np.pi * (49) * t) + 0.2530317 * np.sin(2*np.pi * (25) * t)+ 0.2220396 * np.sin(2*np.pi * (6) * t)+ 0.2169014* np.sin(2*np.pi * (8) * t)+0.1802196* np.sin(2*np.pi * (13) * t)+ 0.1799041* np.sin(2*np.pi * (226) * t) +  0.17207* np.sin(2*np.pi * (171) * t) +  0.158741* np.sin(2*np.pi * (196) * t) + 0.686119* np.sin(2*np.pi * (1.0) * t ) + 0.396291* np.sin(2*np.pi * (2.0) * t ) + 0.3602* np.sin(2*np.pi * (3.0) * t )+ 0.238323* np.sin(2*np.pi * (4.0) * t ) + 0.1990* np.sin(2*np.pi * (5.0) * t )))) - np.sin(2*np.pi*98)
-signal = np.sin(2*np.pi * (0) *t + 0.2725972 * np.sin(2*np.pi * (49) * t) + 0.2530317 * np.sin(2*np.pi * (25) * t)+ 0.2220396 * np.sin(2*np.pi * (6) * t) )#+ 0.2169014* np.sin(2*np.pi * (8) * t)+0.1802196* np.sin(2*np.pi * (13) * t) + 0.686119* np.sin(2*np.pi * (1.0) * t ) + 0.396291* np.sin(2*np.pi * (2.0) * t ) + 0.3602* np.sin(2*np.pi * (3.0) * t )+ 0.238323* np.sin(2*np.pi * (4.0) * t ) + 0.1990* np.sin(2*np.pi * (5.0) * t ))
+signal = np.sin(2*np.pi * (0) *t + 0.2725972 * np.sin(2*np.pi * (49) * t) + 0.2530317 * np.sin(2*np.pi * (25) * t)+ 0.2220396 * np.sin(2*np.pi * (6) * t) + 0.2169014* np.sin(2*np.pi * (8) * t)+0.1802196* np.sin(2*np.pi * (13) * t) + 0.686119* np.sin(2*np.pi * (1.0) * t ) + 0.396291* np.sin(2*np.pi * (2.0) * t ) + 0.3602* np.sin(2*np.pi * (3.0) * t )+ 0.238323* np.sin(2*np.pi * (4.0) * t ) + 0.1990* np.sin(2*np.pi * (5.0) * t ))
+
+x, _ = librosa.load('combined2.wav', sr=48000, mono=True)
+z, _ = librosa.load('ifft2.wav', sr=48000, mono=True)
+a, _ = librosa.load('jusbass.wav', sr=48000, mono=False)
+a = a[0]
+y, sr = librosa.load('../examples/test_runtime/TEST_1s.wav', sr=48000, mono=False)
+y=y[0]
+
+fftx = np.fft.fft(x)
+fftz = np.fft.fft(z)
+ffty = np.fft.fft(y)
+ffta = np.fft.fft(a)
+# fftx = fftx / np.max(abs(fftx))
+# fftz = fftz / np.max(abs(fftz))
+# ffty = ffty / np.max(abs(ffty))
+
+plt.plot(np.linspace(0, sample_rate, len(fftx)), abs(fftx), label='fft1', color='red')
+plt.plot(np.linspace(0, sample_rate, len(fftz)), abs(fftz), label='fft1', color='blue')
+plt.plot(np.linspace(0, sample_rate, len(ffty)), abs(ffty), label='fft1', color='green')
+plt.plot(np.linspace(0, sample_rate, len(ffta)), abs(ffta), label='fft1', color='purple')
+
+plt.show()
+
+
+
 
 
 def modulator(c):
-    return np.sin(2*np.pi * (c) *t + 0.2725972 * np.sin(2*np.pi * (49) * t) +  0.2530317 * np.sin(2*np.pi * (25) * t)) 
+    return np.sin(2*np.pi * (c) *t  + 0.2725972 * np.sin(2*np.pi * (49) * t) ) - np.sin(2*np.pi*c)
 
 
 # signal *= 0.2725972 * np.sin(2*np.pi * (49) * t) * 0.2530317 * np.sin(2*np.pi * (25) * t)* 0.2220396 * np.sin(2*np.pi * (6) * t)* 0.2169014* np.sin(2*np.pi * (8) * t)*0.1802196* np.sin(2*np.pi * (13) * t)* 0.1799041* np.sin(2*np.pi * (226) * t) *  0.17207* np.sin(2*np.pi * (171) * t) *  0.158741* np.sin(2*np.pi * (196) * t) * 0.686119* np.sin(2*np.pi * (1.0) * t ) * 0.396291* np.sin(2*np.pi * (2.0) * t ) * 0.3602* np.sin(2*np.pi * (3.0) * t )* 0.238323* np.sin(2*np.pi * (4.0) * t ) * 0.1990* np.sin(2*np.pi * (5.0) * t )
@@ -86,23 +111,26 @@ ffty = ffty / np.max(abs(ffty))
 
 
 fft_fft = np.fft.fft(abs(fft)[:N//2])
+
+fft_fft = np.fft.fftshift(fft_fft, 0)
+
 fft_ffty = np.fft.fft(abs(ffty)[:N//2])
 
 
 
 # convolved_mags = abs(fft_fft) * abs(fft_ffty)
 convolved_mags = fft_fft * fft_ffty
-plt.plot(np.linspace(0, sample_rate // 2, sample_rate // 2 ), abs(convolved_mags), label='fft1', color='red')
-plt.show()
+# plt.plot(np.linspace(0, sample_rate // 2, sample_rate // 2 ), abs(convolved_mags), label='fft1', color='red')
+# plt.show()
 convolved_mags = np.fft.ifft(convolved_mags)
-plt.plot(np.linspace(0, sample_rate // 2, sample_rate  //2), abs(convolved_mags), label='fft1', color='blue')
-plt.show()
+# plt.plot(np.linspace(0, sample_rate // 2, sample_rate  //2), abs(convolved_mags), label='fft1', color='blue')
+# plt.show()
 
 
 # make conjugate symetric
 convolved_mags = np.concatenate((convolved_mags, np.conj(np.flip(convolved_mags))))
-plt.plot(np.linspace(0, sample_rate , sample_rate  ), convolved_mags, label='fft1', color='blue')
-plt.show()
+# plt.plot(np.linspace(0, sample_rate , sample_rate  ), convolved_mags, label='fft1', color='blue')
+# plt.show()
 # keep phases from fft but use new mags
 convolved = abs(convolved_mags) * np.exp(1j * np.angle(ffty))
 convolvedfft = np.fft.fft(convolved)
@@ -151,20 +179,30 @@ freqs = np.linspace(0, sample_rate, sample_rate)
 arr = []
 
 for i, freq in enumerate(freqs):
-    if i > 2000:
+    if i > 0:
         break
     print(f"{i} / {len(freqs)}")
     sig = modulator(freq)
     sigfft = np.fft.fft(sig)
-    sigfft = sigfft / np.max(abs(sigfft))
-    sigfft[i] = 0
-    sum_ = np.sum(abs(sigfft)[:N//2]*abs(ffty)[:N//2] / np.max(abs(ffty)[:N//2]))
-    # sum_ -= np.sum(abs(sigfft)[:N//2] *abs(ffty)[:N//2])
-    print(sum_)
-    arr.append(sum_)
+    sigfft = sigfft 
+    # sigfft[i] = 0
+    # sum_ = abs(np.sum(abs(sigfft)[:N//2]* abs((ffty)[:N//2] )) ) / abs(np.sum(ffty[:N//2] * np.conj(ffty)[:N//2]))
+    # correlate the two:
+    correleation = np.correlate(abs(sigfft), np.flip(abs(ffty)), mode='full') / np.max(abs(sigfft))
+    print(correleation)
+    plt.plot(np.linspace(0, sample_rate, len(correleation)), correleation, label='fft1', color='red')
+    plt.show()
+    # sum_ = correleation
+    # sum_ = np.sum(abs(sigfft)[:N//2]* abs((ffty)[:N//2] )) / np.sum(ffty[:N//2] * np.conj(ffty)[:N//2])
+    # sum_ -= np.sum(abs(sigfft)[i] *abs(ffty)[i])
+    # sum_ *= sum_
+    # print(sum_)
+    # arr.append(sum_)
+    arr = correleation[len(correleation)//2:]
     
 arr = np.array(arr)
-arr = arr / np.max(arr)
+arr = arr - np.min(arr) 
+# arr = arr / np.max(arr)
 # plt.plot(np.linspace(0, 2001, 2001), arr, label='fft1', color='red')
 # plt.plot(np.linspace(0, sample_rate, 2001), abs(fft), label='fft1', color='green', linewidth = 0.5)
 # plt.plot(np.linspace(0, sample_rate, 2001), abs(ffty), label='ffty1', color='blue', linewidth =0.5)
@@ -172,13 +210,23 @@ arr = arr / np.max(arr)
 # plt.show()
 
 
-toshow = np.zeros((sample_rate))
+toshow = np.zeros(len(arr))
 toshow[:len(arr)] = arr
-toshow[-len(arr):] = np.flip(arr)
+
 toshow = toshow / np.max(toshow)
 
 mags = abs(np.fft.fft(y))
-mags *= toshow
+
+mags_ = np.sqrt(mags*toshow)
+mags = mags*toshow
+magsmax = np.max(mags)
+mags /= magsmax
+new_mags = np.zeros(len(mags))
+for i in range(len(mags)):
+    new_mags[i] = min(mags[i], toshow[i])
+mags *= magsmax
+        
+
 ifft2 = np.fft.ifft(mags * np.exp(1j * np.angle(ffty)))
 ifft2 = np.real(ifft2)
 ifft2 = ifft2 / np.max(abs(y))
@@ -207,8 +255,10 @@ adjust3 = fftymax3 / fftmax3 * 0.9
 print(adjust2)
 plt.plot(np.linspace(0, sample_rate, sample_rate), abs(ffty)-adjust*abs(fft), label='fft1', color='red', linewidth=0.5)
 # plt.plot(np.linspace(0, sample_rate, sample_rate), abs(ffty)*adjust*abs(fft) , label='fft1', color='purple', linewidth=2)
-plt.plot(np.linspace(0, sample_rate, sample_rate), toshow , label='fft1', color='purple', linewidth=2)
-plt.plot(np.linspace(0, sample_rate, sample_rate), convoled_mags , label='fft1', color='green', linewidth=2)
+plt.plot(np.linspace(0, sample_rate, sample_rate), toshow / max(toshow) , label='fft1', color='purple', linewidth=2)
+plt.plot(np.linspace(0, sample_rate, sample_rate), mags /max(mags), label='fft1', color='red', linewidth=2)
+plt.plot(np.linspace(0, sample_rate, sample_rate), mags_ /max(mags_), label='fft1', color='green', linewidth=2)
+# plt.plot(np.linspace(0, sample_rate, sample_rate), convoled_mags , label='fft1', color='green', linewidth=2)
 plt.plot(np.linspace(0, sample_rate, sample_rate), adjust2*abs(fft2), label='fft1', color='orange', linewidth = 0.5)
 plt.plot(np.linspace(0, sample_rate, sample_rate), adjust*abs(fft), label='fft1', color='green', linewidth = 0.5)
 # plt.plot(np.linspace(0, sample_rate //2, sample_rate //2), adjust3*abs(fft3)[:N//2], label='fft1', color='yellow', linewidth = 0.5)
