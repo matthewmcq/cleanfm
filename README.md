@@ -34,6 +34,7 @@ This project requires the FFTW3 library for Fast Fourier Transform computations.
 - `threadpool.h`: Defines helper structures and a basic ThreadPool class for parallel processing.
 - `waveprocessor.cpp`, `waveprocessor.h`: Implements functions for reading, processing (FFT/IFFT), and writing WAV audio files.
 - `thesis.tex`: LaTeX source for the project's thesis write-up, providing detailed mathematical foundations and discussions of the methods and applications.
+- `cstft.sh`: Bash script to run the Cleaned STFT (DKD + STFT) algorithm.
 
 ## Building and Running
 
