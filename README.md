@@ -9,7 +9,7 @@ CleanFM is a novel approach to spectral analysis that directly addresses the fun
 
 2. **Parallel DKD Implementation**: An efficient parallel version of DKD that maintains accuracy while significantly reducing computational requirements.
 
-3. **Applications of DKD**: Demonstration of DKD's utility in tasks such as idealized signal resampling, creating a "cleaned" Short-Time Fourier Transform (CSTFT) with superior resolution.
+3. **Applications of DKD**: Demonstration of DKD's utility in tasks such as idealized signal resampling and creating a "cleaned" Short-Time Fourier Transform (CSTFT) with superior resolution.
 
 4. **Frequency Modulation Transform (FMT)**: A novel mathematical operator that reveals harmonic relationships within complex signals by analyzing the "frequencies of frequencies." (C++ implementation in progress, not included in this version. Application in thesis shows FMT can be used as an audio source separation tool that does not require machine learning)
 
