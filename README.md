@@ -60,11 +60,11 @@ In addition to the core DKD and FMT algorithms, this project explores several pr
 
 
 - Idealized frequency domain resampling that preserves spectral characteristics
-- *A "Cleaned STFT" with dramatically improved frequency resolution
+- A "Cleaned STFT" with dramatically improved frequency resolution
 - *Preliminary work on source separation using the FMT representation
 
-*These are not included in the current repository, as the C++ implementation is in progress
-If you would like the python + bash scripts to run the Cleaned STFT (CSTFT) or FMT please either:
+*Not included in the current repository, as the C++ implementation is in progress
+If you would like the python + bash scripts to run FMT please either:
 - Message me on GitHub or
 - contact me at matthewdmcquistion_at_gmail_dot_com
 
