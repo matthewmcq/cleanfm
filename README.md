@@ -1,5 +1,5 @@
 # cleanfm
-Implementation of parallel Dirichlet Kernel Deconvolution algorithm for precise FFT parameter estimation and spectral leakage elimination. Repository for code contained in Matthew McQuistion's Applied Mathematics Honors Thesis at Brown University
+Implementation of the Dirichlet Kernel Deconvolution algorithm (parallel and single-threaded) for precise FFT parameter estimation and spectral leakage elimination. Repository for code contained in Matthew McQuistion's Applied Mathematics Honors Thesis at Brown University
 
 ## CleanFM: A Windowless Approach to Spectral Leakage and the Frequency Modulation Transform
 
