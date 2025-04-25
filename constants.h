@@ -1,57 +1,97 @@
-//
-// Created by Matthew McQuistion on 12/17/24.
-//
+/**
+ * @file constants.h
+ * @author Matthew McQuistion
+ * @date 12/17/24
+ * @brief Defines various inline constants used throughout the project, particularly for audio processing and algorithms.
+ *
+ * This header file centralizes the definition of numerical constants and
+ * parameters used in different parts of the application, including those
+ * related to audio processing window sizes, iteration steps, limits,
+ * and algorithm tolerances.
+ */
 
-
-#ifndef CONSTANTS_H
+#ifndef CONSTANTS_H // Include guard to prevent multiple inclusions
 #define CONSTANTS_H
-#include <complex>
-#include <cmath>
-#include <vector>
 
+#pragma once // Alternative include guard, preferred by some compilers
+
+#include <complex> // Required for std::complex
+#include <cmath>   // Required for mathematical functions like std::sqrt (though not directly used here, often needed with complex numbers)
+#include <vector>  // Required for std::vector
+
+/**
+ * @brief Alias for std::complex<double> for convenience.
+ *
+ * Defines 'Complex' as a synonym for the standard complex number type
+ * using double-precision floating-point values.
+ */
 using Complex = std::complex<double>;
-enum class SpectralDivisionMethod {
-    UNIFORM,              // Original uniform division
-    EQUAL_ENERGY,         // Equal energy content per band
-    PERCEPTUAL_WEIGHTING, // Weighted energy with high-frequency boost
-    MAGNITUDE_THRESHOLD,   // Division based on magnitude thresholds
-    HYBRID
-};
 
-
+/**
+ * @brief Defines the size of the window used for phase estimation in processing.
+ *
+ * This constant determines the number of frequency bins considered around a peak
+ * for accurate phase calculation.
+ */
 inline int PHASE_WINDOW_SIZE = 3; // 9
+
+/**
+ * @brief Defines the size of the window used for frequency estimation in processing.
+ *
+ * This constant determines the number of frequency bins considered around a peak
+ * for accurate frequency calculation.
+ */
 inline int FREQUENCY_WINDOW_SIZE = 4; // 10
 
-inline int PHASE_NUM_STEPS = 256;
-inline int FREQUENCY_NUM_STEPS = 512;
+
+/**
+ * @brief The maximum number of components (e.g., peaks) expected or allowed.
+ *
+ * This constant sets an upper limit on the number of individual frequency
+ * components that the algorithm will attempt to identify or process.
+ */
 inline int MAX_COMPONENTS = 40000;
 
-// inline int ITER_WINDOW_SIZE = 10000;
+/**
+ * @brief The golden ratio constant.
+ *
+ * Used in algorithms that employ golden section search or related optimization techniques.
+ */
 inline double PHI = 1.618033988749895;
+
+/**
+ * @brief Tolerance level for Golden Section Search (GSS).
+ *
+ * This constant defines the desired accuracy for the golden section search
+ * algorithm, determining when the search should terminate.
+ */
 inline double GSS_TOLERANCE = 1e-8;//1e-11;
+
+/**
+ * @brief Convergence threshold for iterative algorithms.
+ *
+ * This constant defines the level of change between iterations below which
+ * an algorithm is considered to have converged.
+ */
 inline double CONVERGENCE = 1e-6;
-inline int MAX_FM_COMPONENTS = 1;
-inline int MAX_FM_ITERATIONS = 1;
-inline bool RAISED_BESSEL = false;
-inline double RAISED_BESSEL_CONSTANT = 0.402759;
 
 // Threads
-inline int BATCH_SIZE = 1024;
 
-// FM
-inline double DEFAULT_HARMONIC_MOD_INDEX = 0.000001;
-inline double DEFAULT_LFO_INDEX = 1.0;
-inline double DEFAULT_LFO_FREQ = 1.0;
+/**
+ * @brief The size of batches for parallel processing tasks.
+ *
+ * This constant is used to divide larger processing tasks into smaller batches
+ * that can be distributed among threads in a thread pool.
+ */
+inline int BATCH_SIZE = 256;
 
-inline double MIN_LFO_FREQ = 0.01;
-inline double MAX_LFO_FREQ = 2.0;
-inline double MIN_LFO_INDEX = 0.01;
-inline double MAX_LFO_INDEX = 1.4347;
+/**
+ * @brief Flag to enable or disable verbose output for debugging parallel processing.
+ *
+ * When set to true, enables detailed output messages related to the parallel
+ * execution of algorithms (e.g., DKD).
+ */
 inline bool VERBOSE_OUTPUT = true; // for debugging DKD parallel
-
-inline SpectralDivisionMethod SPECTRAL_DIVISION_METHOD = SpectralDivisionMethod::UNIFORM;
-
 
 
 #endif //CONSTANTS_H
-

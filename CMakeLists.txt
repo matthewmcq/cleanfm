@@ -20,11 +20,6 @@ add_library(cleanfm_lib
         deconvolve/cleandft.cpp
         deconvolve/cleandft.h
         deconvolve/threadpool.h
-        #        ${CMAKE_CURRENT_SOURCE_DIR}/fm/fmoperator.h
-#        ${CMAKE_CURRENT_SOURCE_DIR}/fm/fmoperator.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/fm/fmdecomposer.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/fm/fmdecomposer.h
-#        ${CMAKE_CURRENT_SOURCE_DIR}/fm/bessellookup.h
 )
 
 # Set include directories for the library

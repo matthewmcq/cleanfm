@@ -2,6 +2,7 @@ build/*
 *.wav
 *.bin
 tex/*
-
+*.txt
 *.csv
 *.png
+.vscode
