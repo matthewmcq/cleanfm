@@ -9,9 +9,9 @@ CleanFM is a novel approach to spectral analysis that directly addresses the fun
 
 2. **Parallel DKD Implementation**: An efficient parallel version of DKD that maintains accuracy while significantly reducing computational requirements.
 
-3. **Applications of DKD**: Demonstration of DKD's utility in tasks such as idealized signal resampling, creating a "cleaned" Short-Time Fourier Transform (STFT) with superior resolution, and source separation without machine learning.
+3. **Applications of DKD**: Demonstration of DKD's utility in tasks such as idealized signal resampling, creating a "cleaned" Short-Time Fourier Transform (CSTFT) with superior resolution.
 
-4. **Frequency Modulation Transform (FMT)**: A novel mathematical operator that reveals harmonic relationships within complex signals by analyzing the "frequencies of frequencies." (C++ implementation in progress, not included in this version.)
+4. **Frequency Modulation Transform (FMT)**: A novel mathematical operator that reveals harmonic relationships within complex signals by analyzing the "frequencies of frequencies." (C++ implementation in progress, not included in this version. Application in thesis shows FMT can be used as an audio source separation tool that does not require machine learning)
 
 ## Dependencies
 
@@ -29,12 +29,11 @@ This project requires the FFTW3 library for Fast Fourier Transform computations.
 - `CMakeLists.txt`: CMake configuration file for building the project.
 - `constants.h`: Header file defining various inline constants used throughout the project.
 - `main.cpp`: Main driver program for the CleanDFT (DKD) spectral analysis tool.
-- `cleandft.cpp`, `cleandft.h`: Implementation and declaration of the DKD algorithm.
-- `dirichletkernel.cpp`, `dirichletkernel.h`: Implementation and declaration of the Dirichlet kernel calculations.
-- `threadpool.h`: Defines helper structures and a basic ThreadPool class for parallel processing.
-- `waveprocessor.cpp`, `waveprocessor.h`: Implements functions for reading, processing (FFT/IFFT), and writing WAV audio files.
-- `thesis.tex`: LaTeX source for the project's thesis write-up, providing detailed mathematical foundations and discussions of the methods and applications.
-- `cstft.sh`: Bash script to run the Cleaned STFT (DKD + STFT) algorithm.
+- `deconvolve/cleandft.cpp`, `deconvolve/cleandft.h`: Implementation and declaration of the DKD algorithm.
+- `deconvolve/dirichletkernel.cpp`, `deconvolve/dirichletkernel.h`: Implementation and declaration of the Dirichlet kernel calculations.
+- `deconvolve/threadpool.h`: Defines helper structures and a basic ThreadPool class for parallel processing.
+- `fft/waveprocessor.cpp`, `fft/waveprocessor.h`: Implements functions for reading, processing (FFT/IFFT), and writing WAV audio files.
+- `cstft/cstft.sh`: Bash script to run the Cleaned STFT (DKD + STFT) algorithm.
 
 ## Building and Running
 
