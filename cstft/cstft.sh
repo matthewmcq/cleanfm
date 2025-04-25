@@ -3,7 +3,7 @@
 # Modified to accept audio file paths as command line arguments
 
 # --- Configuration ---
-DKD_EXECUTABLE="./../build/cleanfm" # Path to the DKD executable
+DKD_EXECUTABLE="../build/cleanfm" # Path to the DKD executable
 PYTHON_SCRIPT="cleaned_stft.py" # Path to the Python script for frame preparation and visualization
 OUTPUT_DIR="cleaned_stft_results" # Directory to store all output
 THREADS=12 # Number of threads to use for processing
