@@ -17,6 +17,8 @@ add_library(cleanfm_lib
         ${CMAKE_CURRENT_SOURCE_DIR}/constants.h
         ${CMAKE_CURRENT_SOURCE_DIR}/deconvolve/dirichletkernel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/deconvolve/dirichletkernel.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/fmt/fmt.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/fmt/fmt.h
         deconvolve/cleandft.cpp
         deconvolve/cleandft.h
         deconvolve/threadpool.h
@@ -29,7 +31,8 @@ target_include_directories(cleanfm_lib
 )
 
 # Main executable
-add_executable(cleanfm main.cpp)
+add_executable(cleanfm main.cpp
+        )
 
 # Link libraries to the executable
 target_link_libraries(cleanfm

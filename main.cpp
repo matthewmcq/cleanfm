@@ -22,7 +22,7 @@
 #include <string>
 #include <atomic>        // For atomic<int> in thread timing (if implemented)
 #include <cmath>         // For log10, sqrt, abs
-
+#include "fmt/fmt.h"
 #include "fft/waveprocessor.h"
 #include "deconvolve/cleandft.h" // Assumes cleandft.h defines MAX_COMPONENTS or similar
 
@@ -83,7 +83,10 @@ void printUsage(const char *programName) {
             << " -h, --help                 Show this help message and exit\n"
             << " -mc, --max-components NUM  Override maximum number of components to extract (default: set in code)\n"
             << " -ni, --non-iterative       Use non-iterative parallel deconvolution (faster, potentially less accurate phase)\n"
-            << " -rs, --resample RATE       Resample output audio to RATE Hz (requires -o)\n";
+            << " -rs, --resample RATE       Resample output audio to RATE Hz (requires -o)\n"
+            << " --fmt FILE              Compute FMT and save to CSV file\n"
+            << " --fmt-lookup FILE       Path to FMT lookup table CSV (default: fmt_lookup_table.csv)\n";
+
 }
 
 /**
@@ -158,6 +161,9 @@ int main(int argc, char *argv[]) {
     bool iterative = true; // Use iterative refinement (default)
     bool resample = false; // Flag for resampling output
     size_t new_sample_rate = 0; // Target sample rate for resampling
+    bool run_fmt = false;
+    std::string fmt_output_file;
+    std::string fmt_lookup_table = "fmt/fmt_lookup_table.csv";
 
     // --- Command Line Argument Parsing ---
     for (int i = 1; i < argc; ++i) {
@@ -318,14 +324,32 @@ int main(int argc, char *argv[]) {
                 printUsage(argv[0]);
                 return 1;
             }
+        } else if (arg == "--fmt" || arg == "-fmt") {
+            run_fmt = true;
+            if (i + 1 < argc) {
+                fmt_output_file = argv[++i];
+            } else {
+                std::cerr << "Error: Missing FMT output file path after " << arg << "\n";
+                printUsage(argv[0]);
+                return 1;
+            }
         }
+        else if (arg == "--fmt-lookup") {
+            if (i + 1 < argc) {
+                fmt_lookup_table = argv[++i];
+            }
+        }
+
+
         // Unknown option
         else {
             std::cerr << "Error: Unknown option: " << arg << "\n";
             printUsage(argv[0]);
             return 1;
         }
-    } // End argument parsing loop
+
+    }
+    // End argument parsing loop
 
     // --- Input Validation ---
     // Check if input file was provided
@@ -644,6 +668,37 @@ int main(int argc, char *argv[]) {
             //     std::cout << "Log-Spectral Distance: " << lsd << " dB\n";
             // }
             std::cout << "------------------------\n" << std::endl;
+
+            if (run_fmt) {
+                // Initialize FMT lookup table
+                if (!FMT::initialize(fmt_lookup_table)) {
+                    std::cerr << "Failed to initialize FMT. Exiting." << std::endl;
+                    return 1;
+                }
+
+                // Compute FMT
+                auto fmt_result = FMT::computeFMT(spectrum);
+
+                // Save FMT to CSV
+                FMT::saveFMTToCSV(fmt_result, fmt_output_file, sampleRate, N);
+
+                // Extract FM parameters
+                auto fm_params = FMT::extractFMParameters(fmt_result, sampleRate, N);
+
+                // Output basic info
+                std::cout << "FMT Analysis complete." << std::endl;
+                std::cout << "Found " << fm_params.modulators.size() << " significant modulators:" << std::endl;
+
+                for (size_t i = 0; i < std::min(size_t(10), fm_params.modulators.size()); i++) {
+                    std::cout << "  Modulator " << i + 1 << ": "
+                              << fm_params.modulators[i] << " Hz, β = "
+                              << fm_params.modulation_indices[i] << std::endl;
+                }
+
+                if (fm_params.modulators.size() > 10) {
+                    std::cout << "  ... and " << (fm_params.modulators.size() - 10) << " more" << std::endl;
+                }
+            }
         }
     } catch (const std::exception &e) {
         // Catch standard exceptions and report the error
@@ -651,6 +706,8 @@ int main(int argc, char *argv[]) {
         // Consider ending timers here as well if needed
         return 1; // Return error code
     }
+
+
 
     // Return success code
     return 0;
