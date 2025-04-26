@@ -1154,7 +1154,7 @@ std::vector<double> CleanDFT::decompressComponents(const std::vector<Component> 
 
             // Apply phase correction: ensures the reconstructed sinusoid aligns correctly
             // within the N-point DFT window, accounting for non-integer frequencies.
-            const double corrected_phase = true_phase + M_PI * diff * (1.0 - 1.0 / static_cast<double>(N));
+            const double corrected_phase = true_phase + M_PI * diff / static_cast<double>(N);
             // Standard phase correction
             // Note: The original code had M_PI * diff / N. Testing needed to confirm which correction is theoretically sound/works best.
 
@@ -1175,34 +1175,14 @@ std::vector<double> CleanDFT::decompressComponents(const std::vector<Component> 
             // Determine the bin corresponding to the negative frequency (-m)
             const size_t mirror_bin = N - m;
             // Check bounds: mirror_bin should be valid if m < N
-            if (mirror_bin < N && mirror_bin > 0) {
-                // Ensure mirror bin is within valid range (1 to N-1)
-                // Calculate difference relative to the negative frequency component's expected peak (-true_frequency).
-                // This gets complex with bin indexing. Easier approach:
-                // The spectrum must satisfy S[k] = conj(S[N-k]). We add the component's value
-                // to bin 'm', so we must add its conjugate to bin 'N-m'.
-                // (Let's re-evaluate the original code's mirror logic, it seems complex)
 
-                // Original code's mirror logic: It calculates the kernel value for the mirror bin frequency.
-                // Let's stick to the principle: S[N-m] = conj(S[m]) for the *total* spectrum.
-                // If we add `val` to `spectrum[m]`, we should add `conj(val)` to `spectrum[N-m]`.
-                // However, the loop iterates `m` from 1 to N-1. When `m` reaches values > N/2,
-                // `N-m` will be < N/2. So direct assignment `spectrum[N-m] = conj(spectrum[m])`
-                // after the loop might be simpler.
+            const double mirror_diff = true_frequency - static_cast<double>(mirror_bin);
+            const double mirror_phase_correction =
+                    true_phase + M_PI * mirror_diff / static_cast<double>(N);
+            // Apply same correction logic
+            // Add the conjugate of the kernel value evaluated at the mirror frequency location
+            spectrum[m] += std::conj(amplitude * DirichletKernel::getValueAtBin(mirror_diff, mirror_phase_correction, N));
 
-                // Let's stick to the original code's approach for now, assuming it's correct:
-                // It seems to calculate the contribution of the *positive* true_frequency component
-                // at the *mirror bin frequency* and adds its conjugate.
-                const double mirror_diff = true_frequency - static_cast<double>(mirror_bin);
-                const double mirror_phase_correction =
-                        true_phase + M_PI * mirror_diff * (1.0 - 1.0 / static_cast<double>(N));
-                // Apply same correction logic
-                // Add the conjugate of the kernel value evaluated at the mirror frequency location
-                spectrum[m] += std::conj(
-                    amplitude * DirichletKernel::getValueAtBin(mirror_diff, mirror_phase_correction, N));
-                // This part seems non-standard. A typical reconstruction sums kernels for +freq and -freq.
-                // Adding conj(kernel(mirror_bin)) might be an alternative way to enforce conjugate symmetry.
-            }
         }
     }
 
@@ -1263,7 +1243,7 @@ std::vector<Complex> decompressComponentsWorker(
             // Iterate through spectrum bins (skip DC)
             const double diff = true_frequency - static_cast<double>(m);
             // Apply phase correction (ensure consistency with serial version)
-            const double corrected_phase = true_phase + M_PI * diff * (1.0 - 1.0 / static_cast<double>(N));
+            const double corrected_phase = true_phase + M_PI * diff/ static_cast<double>(N);
             // Standard phase correction
             Complex component_value = amplitude * DirichletKernel::getValueAtBin(
                                           diff, corrected_phase, N
@@ -1272,14 +1252,14 @@ std::vector<Complex> decompressComponentsWorker(
 
             // Handle mirroring using the same logic as the serial function for consistency
             const size_t mirror_bin = N - m;
-            if (mirror_bin < N && mirror_bin > 0) {
+
                 // Check bounds
-                const double mirror_diff = true_frequency - static_cast<double>(mirror_bin);
-                const double mirror_phase_correction =
-                        true_phase + M_PI * mirror_diff * (1.0 - 1.0 / static_cast<double>(N));
-                local_spectrum[m] += std::conj(
-                    amplitude * DirichletKernel::getValueAtBin(mirror_diff, mirror_phase_correction, N));
-            }
+            const double mirror_diff = true_frequency - static_cast<double>(mirror_bin);
+            const double mirror_phase_correction =
+                    true_phase + M_PI * mirror_diff / static_cast<double>(N);
+            local_spectrum[m] += std::conj(
+                amplitude * DirichletKernel::getValueAtBin(mirror_diff, mirror_phase_correction, N));
+
         }
     }
 
