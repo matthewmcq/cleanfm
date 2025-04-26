@@ -53,13 +53,13 @@ void writeComponentsToCSV(const std::vector<CleanDFT::Component> &components,
     file << "frequency_hz,phase,amplitude\n";
 
     // Iterate through each component
-    for (const auto &comp : components) {
+    for (const auto &comp: components) {
         // Convert component frequency from fractional bins (relative to N) to Hertz
         double freq_hz = comp.true_frequency * static_cast<double>(sample_rate) / static_cast<double>(N);
         // Write component data to the file
         file << freq_hz << ","
-             << comp.true_phase << ","
-             << comp.amplitude << "\n";
+                << comp.true_phase << ","
+                << comp.amplitude << "\n";
     }
     file.close(); // Close the file stream
     std::cout << "Components written to " << filename << std::endl;
@@ -72,18 +72,18 @@ void writeComponentsToCSV(const std::vector<CleanDFT::Component> &components,
  */
 void printUsage(const char *programName) {
     std::cout << "Usage: " << programName << " [options]\n"
-              << "Options:\n"
-              << " -f, --file FILE            Input audio file path (required, .wav format)\n"
-              << " -t, --threads NUM          Number of threads for parallel processing (default: hardware concurrency)\n"
-              << " -s, --sequential           Use sequential processing (single thread, overrides -t)\n"
-              << " -o, --output FILE          Output reconstructed audio file path (optional, .wav format)\n"
-              << " -c, --csv FILE             Save extracted components to CSV file (optional)\n"
-              << " -m, --metrics FILE         Save deconvolution accuracy metrics to CSV file (optional, uses metrics version)\n"
-              << " -b, --benchmark            Output timing and component results in machine-readable format\n"
-              << " -h, --help                 Show this help message and exit\n"
-              << " -mc, --max-components NUM  Override maximum number of components to extract (default: set in code)\n"
-              << " -ni, --non-iterative       Use non-iterative parallel deconvolution (faster, potentially less accurate phase)\n"
-              << " -rs, --resample RATE       Resample output audio to RATE Hz (requires -o)\n";
+            << "Options:\n"
+            << " -f, --file FILE            Input audio file path (required, .wav format)\n"
+            << " -t, --threads NUM          Number of threads for parallel processing (default: hardware concurrency)\n"
+            << " -s, --sequential           Use sequential processing (single thread, overrides -t)\n"
+            << " -o, --output FILE          Output reconstructed audio file path (optional, .wav format)\n"
+            << " -c, --csv FILE             Save extracted components to CSV file (optional)\n"
+            << " -m, --metrics FILE         Save deconvolution accuracy metrics to CSV file (optional, uses metrics version)\n"
+            << " -b, --benchmark            Output timing and component results in machine-readable format\n"
+            << " -h, --help                 Show this help message and exit\n"
+            << " -mc, --max-components NUM  Override maximum number of components to extract (default: set in code)\n"
+            << " -ni, --non-iterative       Use non-iterative parallel deconvolution (faster, potentially less accurate phase)\n"
+            << " -rs, --resample RATE       Resample output audio to RATE Hz (requires -o)\n";
 }
 
 /**
@@ -100,7 +100,8 @@ double calculateLSD(const std::vector<Complex> &originalSpectrum,
                     const std::vector<Complex> &reconstructedSpectrum) {
     // Use the minimum size to avoid out-of-bounds access, comparing only overlapping parts
     const size_t N = std::min(originalSpectrum.size(), reconstructedSpectrum.size());
-    if (N <= 1) { // Need at least one bin beyond DC for meaningful comparison
+    if (N <= 1) {
+        // Need at least one bin beyond DC for meaningful comparison
         return 0.0;
     }
 
@@ -110,7 +111,8 @@ double calculateLSD(const std::vector<Complex> &originalSpectrum,
     // Iterate through the bins (typically up to Nyquist, N/2, but here full spectrum for simplicity)
     // Start from k=0 (including DC) or k=1 (excluding DC). Excluding is common for LSD. Let's exclude.
     size_t count = 0;
-    for (size_t k = 1; k < N / 2; k++) { // Iterate up to Nyquist bin
+    for (size_t k = 1; k < N / 2; k++) {
+        // Iterate up to Nyquist bin
         // Calculate power (magnitude squared) and add epsilon
         double original_power = std::norm(originalSpectrum[k]) + epsilon;
         double reconstructed_power = std::norm(reconstructedSpectrum[k]) + epsilon;
@@ -144,18 +146,18 @@ double calculateLSD(const std::vector<Complex> &originalSpectrum,
  */
 int main(int argc, char *argv[]) {
     // --- Default Parameter Initialization ---
-    size_t N = 0;                                  // FFT size, determined after loading audio
-    std::string input_file;                        // Path to input WAV file
-    bool use_parallel = true;                      // Flag for parallel processing (default)
-    int num_threads = std::thread::hardware_concurrency(); // Default thread count
-    std::string output_file;                       // Path for reconstructed WAV file (optional)
-    std::string csv_file;                          // Path for components CSV file (optional)
-    bool benchmark_mode = false;                   // Flag for machine-readable output
-    std::string metrics_file;                      // Path for metrics CSV file (optional)
-    int maxcomp = MAX_COMPONENTS;                  // Max components to extract (use default from CleanDFT)
-    bool iterative = true;                         // Use iterative refinement (default)
-    bool resample = false;                         // Flag for resampling output
-    size_t new_sample_rate = 0;                    // Target sample rate for resampling
+    size_t N = 0; // FFT size, determined after loading audio
+    std::string input_file; // Path to input WAV file
+    bool use_parallel = true; // Flag for parallel processing (default)
+    uint32_t num_threads = std::thread::hardware_concurrency(); // Default thread count
+    std::string output_file; // Path for reconstructed WAV file (optional)
+    std::string csv_file; // Path for components CSV file (optional)
+    bool benchmark_mode = false; // Flag for machine-readable output
+    std::string metrics_file; // Path for metrics CSV file (optional)
+    int maxcomp = MAX_COMPONENTS; // Max components to extract (use default from CleanDFT)
+    bool iterative = true; // Use iterative refinement (default)
+    bool resample = false; // Flag for resampling output
+    size_t new_sample_rate = 0; // Target sample rate for resampling
 
     // --- Command Line Argument Parsing ---
     for (int i = 1; i < argc; ++i) {
@@ -163,7 +165,8 @@ int main(int argc, char *argv[]) {
 
         // Input file
         if (arg == "-f" || arg == "--file") {
-            if (i + 1 < argc) { // Check if there is a value after the flag
+            if (i + 1 < argc) {
+                // Check if there is a value after the flag
                 input_file = argv[++i]; // Assign value and increment index
             } else {
                 std::cerr << "Error: Missing file path after " << arg << "\n";
@@ -180,11 +183,21 @@ int main(int argc, char *argv[]) {
                         std::cerr << "Error: Number of threads must be positive\n";
                         return 1;
                     }
-                    use_parallel = true; // Explicitly enable parallel if threads are set > 1 (or even 1)
-                } catch (const std::invalid_argument& e) {
-                    std::cerr << "Error: Invalid number provided for threads.\n"; return 1;
-                } catch (const std::out_of_range& e) {
-                     std::cerr << "Error: Number provided for threads is out of range.\n"; return 1;
+                    if (num_threads > std::thread::hardware_concurrency()) {
+                        num_threads = std::thread::hardware_concurrency();
+                        std::cout << "Input thread count exceeds available cores, using " << num_threads << " instead"
+                                << "\n";
+                    }
+                    if (num_threads != 1) {
+                        use_parallel = true;
+                    }
+
+                } catch (const std::invalid_argument &e) {
+                    std::cerr << "Error: Invalid number provided for threads.\n";
+                    return 1;
+                } catch (const std::out_of_range &e) {
+                    std::cerr << "Error: Number provided for threads is out of range.\n";
+                    return 1;
                 }
             } else {
                 std::cerr << "Error: Missing number after " << arg << "\n";
@@ -232,10 +245,12 @@ int main(int argc, char *argv[]) {
                 metrics_file = argv[++i];
                 // Ensure parallel metrics function is used even if user requested sequential
                 if (!use_parallel) {
-                     std::cout << "Warning: Metrics collection forces use of parallel function structure (with 1 thread if -s specified)." << std::endl;
-                     // The metrics function handles the single thread case internally
-                     use_parallel = true; // Flag internally remains true to call the correct function
-                     num_threads = 1;     // But run it with only 1 thread if -s was set
+                    std::cout <<
+                            "Warning: Metrics collection forces use of parallel function structure (with 1 thread if -s specified)."
+                            << std::endl;
+                    // The metrics function handles the single thread case internally
+                    use_parallel = true; // Flag internally remains true to call the correct function
+                    num_threads = 1; // But run it with only 1 thread if -s was set
                 }
             } else {
                 std::cerr << "Error: Missing metrics file path after " << arg << "\n";
@@ -245,33 +260,40 @@ int main(int argc, char *argv[]) {
         }
         // Max components override
         else if (arg == "-mc" || arg == "--max-components") {
-             if (i + 1 < argc) {
+            if (i + 1 < argc) {
                 try {
                     maxcomp = std::stoi(argv[++i]);
                     if (maxcomp <= 0) {
-                        std::cerr << "Error: Maximum components must be positive.\n"; return 1;
+                        std::cerr << "Error: Maximum components must be positive.\n";
+                        return 1;
                     }
                     std::cout << "Max components overridden to: " << maxcomp << std::endl;
-                } catch (const std::invalid_argument& e) {
-                     std::cerr << "Error: Invalid number provided for max components.\n"; return 1;
-                } catch (const std::out_of_range& e) {
-                     std::cerr << "Error: Number provided for max components is out of range.\n"; return 1;
+                } catch (const std::invalid_argument &e) {
+                    std::cerr << "Error: Invalid number provided for max components.\n";
+                    return 1;
+                } catch (const std::out_of_range &e) {
+                    std::cerr << "Error: Number provided for max components is out of range.\n";
+                    return 1;
                 }
-             } else {
-                  std::cerr << "Error: Missing number after " << arg << "\n";
-                  printUsage(argv[0]); return 1;
-             }
+            } else {
+                std::cerr << "Error: Missing number after " << arg << "\n";
+                printUsage(argv[0]);
+                return 1;
+            }
         }
         // Non-iterative flag
         else if (arg == "-ni" || arg == "--non-iterative") {
             iterative = false;
-            if (!use_parallel && !benchmark_mode) { // Warn if trying sequential non-iterative (not implemented typically)
-                std::cout << "Warning: Non-iterative mode usually requires parallel implementation. Forcing parallel structure." << std::endl;
-                 use_parallel = true; // Force using the parallel non-iterative function
-                 num_threads = 1;     // Run it with 1 thread if -s was also specified
+            if (!use_parallel && !benchmark_mode) {
+                // Warn if trying sequential non-iterative (not implemented typically)
+                std::cout <<
+                        "Warning: Non-iterative mode usually requires parallel implementation. Forcing parallel structure."
+                        << std::endl;
+                use_parallel = true; // Force using the parallel non-iterative function
+                num_threads = 1; // Run it with 1 thread if -s was also specified
             }
             if (!benchmark_mode) {
-                 std::cout << "Warning: Non-iterative mode selected. Phase accuracy might be lower." << std::endl;
+                std::cout << "Warning: Non-iterative mode selected. Phase accuracy might be lower." << std::endl;
             }
         }
         // Resample flag
@@ -281,12 +303,15 @@ int main(int argc, char *argv[]) {
                     resample = true;
                     new_sample_rate = std::stoul(argv[++i]); // Use stoul for unsigned size_t
                     if (new_sample_rate <= 0) {
-                         std::cerr << "Error: Resample rate must be positive.\n"; return 1;
+                        std::cerr << "Error: Resample rate must be positive.\n";
+                        return 1;
                     }
-                } catch (const std::invalid_argument& e) {
-                     std::cerr << "Error: Invalid number provided for resample rate.\n"; return 1;
-                } catch (const std::out_of_range& e) {
-                     std::cerr << "Error: Number provided for resample rate is out of range.\n"; return 1;
+                } catch (const std::invalid_argument &e) {
+                    std::cerr << "Error: Invalid number provided for resample rate.\n";
+                    return 1;
+                } catch (const std::out_of_range &e) {
+                    std::cerr << "Error: Number provided for resample rate is out of range.\n";
+                    return 1;
                 }
             } else {
                 std::cerr << "Error: Missing sample rate after " << arg << "\n";
@@ -315,27 +340,28 @@ int main(int argc, char *argv[]) {
         printUsage(argv[0]);
         return 1;
     }
-     // Check if metrics is requested with non-iterative (not compatible currently)
-     if (!metrics_file.empty() && !iterative) {
-         std::cerr << "Error: Metrics collection (-m) is currently only implemented for the iterative deconvolution method.\n";
-         return 1;
-     }
+    // Check if metrics is requested with non-iterative (not compatible currently)
+    if (!metrics_file.empty() && !iterative) {
+        std::cerr <<
+                "Error: Metrics collection (-m) is currently only implemented for the iterative deconvolution method.\n";
+        return 1;
+    }
 
 
     // --- Configuration Output (if not in benchmark mode) ---
     if (!benchmark_mode) {
         std::cout << "--- Configuration ---\n"
-                  << "Input file:           " << input_file << "\n"
-                  << "Processing mode:      " << (use_parallel ? "Parallel" : "Sequential") << "\n";
+                << "Input file:           " << input_file << "\n"
+                << "Processing mode:      " << (use_parallel ? "Parallel" : "Sequential") << "\n";
         if (use_parallel) {
-             std::cout << "Threads:              " << num_threads << "\n";
+            std::cout << "Threads:              " << num_threads << "\n";
         }
         std::cout << "Deconvolution mode:   " << (iterative ? "Iterative" : "Non-Iterative") << "\n";
         std::cout << "Max components:       " << maxcomp << "\n";
         if (!output_file.empty()) {
             std::cout << "Output file:          " << output_file << "\n";
             if (resample) {
-                 std::cout << "Resample output to:   " << new_sample_rate << " Hz\n";
+                std::cout << "Resample output to:   " << new_sample_rate << " Hz\n";
             }
         }
         if (!csv_file.empty()) {
@@ -349,11 +375,11 @@ int main(int argc, char *argv[]) {
 
     // --- Timing Setup ---
     auto wall_start = std::chrono::high_resolution_clock::now(); // Wall clock time start
-    struct timespec cpu_start, cpu_end;                      // Structs for high-res CPU time
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_start);      // Get start CPU time for the process
-    struct rusage start_usage, end_usage;                     // Structs for resource usage (user/system time)
-    getrusage(RUSAGE_SELF, &start_usage);                     // Get start resource usage
-    clock_t clock_start = clock();                            // Start low-res user time clock
+    struct timespec cpu_start, cpu_end; // Structs for high-res CPU time
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_start); // Get start CPU time for the process
+    struct rusage start_usage, end_usage; // Structs for resource usage (user/system time)
+    getrusage(RUSAGE_SELF, &start_usage); // Get start resource usage
+    clock_t clock_start = clock(); // Start low-res user time clock
 
     // Per-thread timing data (optional, currently not populated in this example)
     // std::vector<double> thread_times;
@@ -376,12 +402,12 @@ int main(int argc, char *argv[]) {
 
         if (!benchmark_mode) {
             std::cout << "Loaded audio: "
-                      << channels << " channels, "
-                      << leftChannel.size() << " samples/channel at "
-                      << sampleRate << " Hz\n";
-             if (channels > 1) {
-                 std::cout << "Processing left channel only." << std::endl;
-             }
+                    << channels << " channels, "
+                    << leftChannel.size() << " samples/channel at "
+                    << sampleRate << " Hz\n";
+            if (channels > 1) {
+                std::cout << "Processing left channel only." << std::endl;
+            }
         }
 
         // --- Compute FFT ---
@@ -399,8 +425,10 @@ int main(int argc, char *argv[]) {
         // --- Initial Peak Counting (Optional Analysis) ---
         // Count local maxima in the magnitude spectrum up to Nyquist as a rough estimate
         int num_peaks = 0;
-        if (N > 2) { // Need at least 3 points for peak definition (i-1, i, i+1)
-            for (size_t i = 1; i < N / 2; ++i) { // Iterate up to Nyquist frequency
+        if (N > 2) {
+            // Need at least 3 points for peak definition (i-1, i, i+1)
+            for (size_t i = 1; i < N / 2; ++i) {
+                // Iterate up to Nyquist frequency
                 // Check if magnitude at bin 'i' is greater than its neighbors
                 if (std::abs(spectrum[i]) > std::abs(spectrum[i - 1]) &&
                     std::abs(spectrum[i]) > std::abs(spectrum[i + 1])) {
@@ -409,7 +437,7 @@ int main(int argc, char *argv[]) {
             }
         }
         if (!benchmark_mode) {
-             std::cout << "Initial FFT peaks found (up to Nyquist): " << num_peaks << std::endl;
+            std::cout << "Initial FFT peaks found (up to Nyquist): " << num_peaks << std::endl;
         }
 
 
@@ -421,47 +449,54 @@ int main(int argc, char *argv[]) {
         if (use_parallel) {
             if (!metrics_file.empty()) {
                 // Use the parallel version that collects metrics
-                if (!benchmark_mode) std::cout << "Using parallel deconvolution with metrics (" << num_threads << " threads)..." << std::endl;
+                if (!benchmark_mode) std::cout << "Using parallel deconvolution with metrics (" << num_threads <<
+                                     " threads)..." << std::endl;
                 components = CleanDFT::deconvolveParallelDirichletWithMetrics(
                     spectrum, sampleRate, num_threads, metrics_file, maxcomp);
             } else if (!iterative) {
-                 // Use the non-iterative parallel version
-                 if (!benchmark_mode) std::cout << "Using non-iterative parallel deconvolution (" << num_threads << " threads)..." << std::endl;
-                 components = CleanDFT::deconvolveNonIterativeParallel(spectrum, sampleRate, num_threads, maxcomp);
-                 // Optional phase refinement step might be needed here
-                 // components = CleanDFT::refineComponentPhases(components, N);
+                // Use the non-iterative parallel version
+                if (!benchmark_mode) std::cout << "Using non-iterative parallel deconvolution (" << num_threads <<
+                                     " threads)..." << std::endl;
+                components = CleanDFT::deconvolveNonIterativeParallel(spectrum, sampleRate, num_threads, maxcomp);
+                // Optional phase refinement step might be needed here
+                // components = CleanDFT::refineComponentPhases(components, N);
             } else {
                 // Use the standard iterative parallel version
-                if (!benchmark_mode) std::cout << "Using iterative parallel deconvolution (" << num_threads << " threads)..." << std::endl;
+                if (!benchmark_mode) std::cout << "Using iterative parallel deconvolution (" << num_threads <<
+                                     " threads)..." << std::endl;
                 components = CleanDFT::deconvolveParallelDirichlet(spectrum, sampleRate, num_threads, maxcomp);
             }
-        } else { // Sequential processing
-             if (!metrics_file.empty()) {
-                 // Metrics requested but sequential specified - run metrics version with 1 thread
-                  if (!benchmark_mode) std::cout << "Using sequential deconvolution with metrics (via 1-thread parallel function)..." << std::endl;
-                  components = CleanDFT::deconvolveParallelDirichletWithMetrics(
-                      spectrum, sampleRate, 1, metrics_file, maxcomp);
-             } else if (!iterative) {
-                 // Non-iterative sequential (if implemented, otherwise falls back or errors)
-                 // Assuming non-iterative requires the parallel structure as noted before:
-                 if (!benchmark_mode) std::cout << "Using non-iterative sequential deconvolution (via 1-thread parallel function)..." << std::endl;
-                 components = CleanDFT::deconvolveNonIterativeParallel(spectrum, sampleRate, 1, maxcomp);
-             }
-             else {
+        } else {
+            // Sequential processing
+            if (!metrics_file.empty()) {
+                // Metrics requested but sequential specified - run metrics version with 1 thread
+                if (!benchmark_mode)
+                    std::cout << "Using sequential deconvolution with metrics (via 1-thread parallel function)..." <<
+                            std::endl;
+                components = CleanDFT::deconvolveParallelDirichletWithMetrics(
+                    spectrum, sampleRate, 1, metrics_file, maxcomp);
+            } else if (!iterative) {
+                // Non-iterative sequential (if implemented, otherwise falls back or errors)
+                // Assuming non-iterative requires the parallel structure as noted before:
+                if (!benchmark_mode)
+                    std::cout << "Using non-iterative sequential deconvolution (via 1-thread parallel function)..." <<
+                            std::endl;
+                components = CleanDFT::deconvolveNonIterativeParallel(spectrum, sampleRate, 1, maxcomp);
+            } else {
                 // Use the standard sequential iterative version
                 if (!benchmark_mode) std::cout << "Using sequential iterative deconvolution..." << std::endl;
                 // Assuming a sequential function exists, e.g., deconvolveDirichletKernel
                 components = CleanDFT::deconvolveDirichletKernel(spectrum, sampleRate, maxcomp);
-                 // Or run the parallel one with 1 thread if no dedicated sequential func:
-                 // components = CleanDFT::deconvolveParallelDirichlet(spectrum, sampleRate, 1, maxcomp);
+                // Or run the parallel one with 1 thread if no dedicated sequential func:
+                // components = CleanDFT::deconvolveParallelDirichlet(spectrum, sampleRate, 1, maxcomp);
             }
         }
         if (!benchmark_mode) {
-             std::cout << "Deconvolution finished. Extracted " << components.size() << " components." << std::endl;
+            std::cout << "Deconvolution finished. Extracted " << components.size() << " components." << std::endl;
         }
 
         // --- Reconstruct Audio and Calculate LSD (if output file requested) ---
-        double lsd = 0.0; // Initialize Log Spectral Distance
+        // double lsd = 0.0; // Initialize Log Spectral Distance
 
         // The original DC component might be modified or recalculated during deconvolution/decompression.
         // Let's keep the original for comparison if needed, though reconstruction uses the potentially updated DC.
@@ -477,8 +512,10 @@ int main(int argc, char *argv[]) {
 
             // Perform resampling if requested
             if (resample) {
-                if (!benchmark_mode) std::cout << "Resampling components to " << new_sample_rate << " Hz..." << std::endl;
-                reconstructed_signal = CleanDFT::resample(components, N, sampleRate, new_sample_rate, DC, 1.0, use_parallel, num_threads);
+                if (!benchmark_mode) std::cout << "Resampling components to " << new_sample_rate << " Hz..." <<
+                                     std::endl;
+                reconstructed_signal = CleanDFT::resample(components, N, sampleRate, new_sample_rate, DC, 1.0,
+                                                          use_parallel, num_threads);
                 output_sample_rate = new_sample_rate; // Set the correct sample rate for writing the file
             }
             // Perform standard decompression (parallel or sequential)
@@ -489,11 +526,11 @@ int main(int argc, char *argv[]) {
             }
 
             if (reconstructed_signal.empty()) {
-                 throw std::runtime_error("Reconstruction resulted in an empty signal.");
+                throw std::runtime_error("Reconstruction resulted in an empty signal.");
             }
 
-            // --- Calculate Log Spectral Distance ---
-            if (!benchmark_mode) std::cout << "Calculating Log Spectral Distance..." << std::endl;
+            // --- Calculate Log-Spectral Distance ---
+            // if (!benchmark_mode) std::cout << "Calculating Log-Spectral Distance..." << std::endl;
             // Compute FFT of the reconstructed signal to compare spectra
             // Note: Reconstruction length might differ if resampling occurred. FFT must match.
             std::vector<Complex> reconstructed_spectrum = WaveProcessor::computeFFT(reconstructed_signal);
@@ -503,8 +540,8 @@ int main(int argc, char *argv[]) {
             // A more correct LSD might compare the original vs reconstruction *before* resampling,
             // or resample the *original* to the target rate for comparison.
             // Sticking to direct comparison for simplicity here:
-            lsd = calculateLSD(spectrum, reconstructed_spectrum);
-            if (!benchmark_mode) std::cout << "LSD calculated: " << lsd << " dB" << std::endl;
+            // lsd = calculateLSD(spectrum, reconstructed_spectrum);
+            // if (!benchmark_mode) std::cout << "LSD calculated: " << lsd << " dB" << std::endl;
 
 
             // --- Write Output Audio File ---
@@ -512,7 +549,6 @@ int main(int argc, char *argv[]) {
             // Write the reconstructed signal to a WAV file with the appropriate sample rate
             WaveProcessor::writeWav(output_file.c_str(), reconstructed_signal, output_sample_rate);
             if (!benchmark_mode) std::cout << "Reconstructed audio written to " << output_file << std::endl;
-
         } // End if (!output_file.empty())
 
         // --- Save Components to CSV (if requested) ---
@@ -523,9 +559,9 @@ int main(int argc, char *argv[]) {
         }
 
         // --- Stop Timers ---
-        clock_t clock_end = clock();                            // Stop low-res clock
-        getrusage(RUSAGE_SELF, &end_usage);                     // Get end resource usage
-        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_end);      // Get end CPU time
+        clock_t clock_end = clock(); // Stop low-res clock
+        getrusage(RUSAGE_SELF, &end_usage); // Get end resource usage
+        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_end); // Get end CPU time
         auto wall_end = std::chrono::high_resolution_clock::now(); // Stop wall clock
 
         // --- Calculate Time Differences ---
@@ -572,11 +608,11 @@ int main(int argc, char *argv[]) {
             std::cout << "SAMPLE_RATE," << sampleRate << std::endl;
             std::cout << "NUM_SAMPLES," << leftChannel.size() << std::endl;
             std::cout << "DURATION," << static_cast<double>(leftChannel.size()) / sampleRate << std::endl;
-            if (!output_file.empty()) {
-                std::cout << "LOG_SPECTRAL_DISTANCE," << lsd << std::endl;
-            }
+            // if (!output_file.empty()) {
+            //     std::cout << "LOG_SPECTRAL_DISTANCE," << lsd << std::endl;
+            // }
             if (resample) {
-                 std::cout << "RESAMPLED_TO_HZ," << new_sample_rate << std::endl;
+                std::cout << "RESAMPLED_TO_HZ," << new_sample_rate << std::endl;
             }
         } else {
             // Output results in a user-friendly format
@@ -586,7 +622,8 @@ int main(int argc, char *argv[]) {
             std::cout << "User CPU time:        " << user_time << " seconds\n";
             std::cout << "System CPU time:      " << system_time << " seconds\n";
             // std::cout << "Clock() time:         " << clock_time << " seconds\n"; // Can be less precise
-            if (use_parallel && wall_time > 1e-9) { // Avoid division by zero
+            if (use_parallel && wall_time > 1e-9) {
+                // Avoid division by zero
                 // Speedup: How much faster than sequential user time (ideally user_time / wall_time)
                 // Efficiency: How well the parallel resources were used ((user_time / wall_time) / num_threads)
                 double speedup = user_time / wall_time;
@@ -598,17 +635,16 @@ int main(int argc, char *argv[]) {
             std::cout << "Extracted components: " << components.size() << "\n";
             if (num_peaks > 0 && !components.empty()) {
                 // Compression ratio: How many original peaks are represented by one component
-                 double ratio = static_cast<double>(num_peaks) / components.size();
-                 // Or maybe FFT bins / components? N / 2 / components.size()
-                 double bin_ratio = static_cast<double>(N/2) / components.size();
-                 std::cout << "Component Density:    1 component per ~" << bin_ratio << " Nyquist bins\n";
+                double ratio = static_cast<double>(num_peaks) / components.size();
+                // Or maybe FFT bins / components? N / 2 / components.size()
+                double bin_ratio = static_cast<double>(N / 2) / components.size();
+                std::cout << "Component Density:    1 component per ~" << bin_ratio << " Nyquist bins\n";
             }
-            if (!output_file.empty()) {
-                std::cout << "Log Spectral Distance: " << lsd << " dB\n";
-            }
-             std::cout << "------------------------\n" << std::endl;
+            // if (!output_file.empty()) {
+            //     std::cout << "Log-Spectral Distance: " << lsd << " dB\n";
+            // }
+            std::cout << "------------------------\n" << std::endl;
         }
-
     } catch (const std::exception &e) {
         // Catch standard exceptions and report the error
         std::cerr << "Error: " << e.what() << std::endl;

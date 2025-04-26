@@ -43,6 +43,14 @@ inline int PHASE_WINDOW_SIZE = 3; // 9
  */
 inline int FREQUENCY_WINDOW_SIZE = 4; // 10
 
+/**
+ * @brief Returns phases in terms of only cosines
+ *
+ * Can be better for real data but converges slower and potentially less accurately
+ * Also is the DSP convention
+ */
+inline bool USE_COSINE_BASIS = true;
+
 
 /**
  * @brief The maximum number of components (e.g., peaks) expected or allowed.

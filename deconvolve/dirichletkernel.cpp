@@ -48,13 +48,18 @@ Complex DirichletKernel::getValueAtBin(const double difference, const double pha
        return std::exp(-i * phase);
    }
 
+    // If you want phases for sine, change COSINE_PHASES_ONLY to false in constants.h
+    // For Non-iterative, sine basis seems to be a better approximation of phases
+    const int sine_coefficient = USE_COSINE_BASIS ? 1 : -1;
+
    // Calculate the complex kernel value
    // The kernel includes both magnitude (sinc-like term) and phase components
    // Assume phase has been corrected for kernel torsion before it has been passed in
    return (numerator / denominator) * Complex(
        std::cos(M_PI * difference + phase),
-       std::sin(-(M_PI * difference + phase))
+       sine_coefficient*std::sin((M_PI * difference + phase))
    );
+
 }
 
 /**
