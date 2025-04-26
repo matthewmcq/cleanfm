@@ -276,6 +276,7 @@ FMT::FMOperatorParams FMT::extractFMParameters(const FMTResult& fmt_result,
     // because the third spectrum is real and symmetric, and peaks in the second
     // half correspond to negative frequencies or are redundant.
     // Also, ensure the peak index is not the DC component (index 0).
+    // IMPORTANT: REMOVE THE " / 2" FROM FOR LOOP TO RETURN FULL FMT RATHER THAN JUST THE FIRST HALF
     for (size_t i = 0; i < fmt_result.peak_indices.size() / 2; i++) { // Iterate through all peak indices
         size_t bin = fmt_result.peak_indices[i];
         if (bin > 0) {  // Exclude the DC component (bin 0)
