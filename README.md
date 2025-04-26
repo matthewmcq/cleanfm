@@ -11,7 +11,7 @@ CleanFM is a novel approach to spectral analysis that directly addresses the fun
 
 3. **Applications of DKD**: Demonstration of DKD's utility in tasks such as idealized signal resampling and creating a "cleaned" Short-Time Fourier Transform (CSTFT) with superior resolution.
 
-4. **Frequency Modulation Transform (FMT)**: A novel mathematical operator that reveals harmonic relationships within complex signals by analyzing the "frequencies of frequencies." (C++ implementation in progress, not included in this version. Application in thesis shows FMT can be used as an audio source separation tool that does not require machine learning)
+4. **Frequency Modulation Transform (FMT)**: A novel mathematical operator that reveals harmonic relationships within complex signals by analyzing the "frequencies of frequencies." 
 
 ## Dependencies
 
@@ -34,6 +34,7 @@ This project requires the FFTW3 library for Fast Fourier Transform computations.
 - `deconvolve/threadpool.h`: Defines helper structures and a basic ThreadPool class for parallel processing.
 - `fft/waveprocessor.cpp`, `fft/waveprocessor.h`: Implements functions for reading, processing (FFT/IFFT), and writing WAV audio files.
 - `cstft/cstft.sh`: Bash script to run the Cleaned STFT (DKD + STFT) algorithm.
+- `fmt/fmt.cpp`: FMT code that reads in 5-th order modulation index approximation from `fmt/fmt_lookup_table.cpp`
 
 ## Building and Running
 
@@ -57,18 +58,11 @@ Use `./cleanfm --help` to see available command line options.
 
 In addition to the core DKD and FMT algorithms, this project explores several promising applications:
 
-
-
 - Idealized frequency domain resampling that preserves spectral characteristics
 - A "Cleaned STFT" with dramatically improved frequency resolution
-- *Preliminary work on source separation using the FMT representation
+- Preliminary work on source separation using the FMT representation
 
-*Not included in the current repository, as the C++ implementation is in progress
-If you would like the python + bash scripts to run FMT please either:
-- Message me on GitHub or
-- contact me at matthewdmcquistion_at_gmail_dot_com
-
-Future work will focus on completing the C++ implementation of FMT, further optimizing computational efficiency, and exploring applications of these techniques to areas such as audio analysis, feature extraction, sound transformation, and unsupervised learning.
+Future work will focus on completing the C++ implementation of FMTSS, further optimizing computational efficiency, and exploring applications of these techniques to areas such as audio analysis, feature extraction, sound transformation, and unsupervised learning.
 
 ## License
 
