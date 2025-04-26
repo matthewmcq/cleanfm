@@ -33,7 +33,7 @@ using Complex = std::complex<double>;
  * This constant determines the number of frequency bins considered around a peak
  * for accurate phase calculation.
  */
-inline int PHASE_WINDOW_SIZE = 1; // 9
+inline int PHASE_WINDOW_SIZE = 3; // 9
 
 /**
  * @brief Defines the size of the window used for frequency estimation in processing.
@@ -91,7 +91,7 @@ inline double CONVERGENCE = 1e-6;
  * This constant is used to divide larger processing tasks into smaller batches
  * that can be distributed among threads in a thread pool.
  */
-inline int BATCH_SIZE = 128;
+inline int BATCH_SIZE = 256;
 
 /**
  * @brief Flag to enable or disable verbose output for debugging parallel processing.
