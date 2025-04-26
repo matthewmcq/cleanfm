@@ -12,11 +12,6 @@
  */
 
 #include "fmt.h" // Include the header file for the FMT class
-// Include the implementation for dr_wav, typically done in one source file.
-// The path assumes it's in the same directory as fmt.cpp.
-// #include "fmt/fmt.cpp" // This line seems incorrect, likely a typo. Assuming it should be an include for dr_wav or similar if needed here.
-// Corrected based on likely intent or removal if not needed here:
-// #include "../libs/dr_wav.h" // Example if dr_wav implementation is needed here
 
 #include "../fft/waveprocessor.h" // Include header for WaveProcessor (for computeFFT)
 #include <fstream> // For file input/output operations (ifstream, ofstream)
@@ -299,14 +294,8 @@ FMT::FMOperatorParams FMT::extractFMParameters(const FMTResult& fmt_result,
 
     // Extract the modulator frequencies and modulation indices from the sorted peaks.
     for (const auto& peak : sorted_peaks) {
+        
         // Convert the peak bin index from the third spectrum to a frequency in Hz.
-        // The frequency resolution of the third spectrum is (sample_rate / original_fft_size) / (third_spectrum_size).
-        // The bin index in the third spectrum corresponds to a frequency in the *original* signal's spectrum.
-        // The scaling factor needs careful consideration based on the sizes of the FFTs.
-        // Assuming the third spectrum size is related to original_fft_size / 2.
-        // A bin 'k' in the third spectrum corresponds to a frequency k * (sample_rate / (original_fft_size / 2))? No, this is complex.
-        // A bin 'k' in the third spectrum corresponds to a frequency k * (sample_rate / original_fft_size) in the original *time-domain* signal's spectrum.
-        // Let's assume the bin-to-frequency mapping is relative to the original FFT size.
         double freq = static_cast<double>(std::get<0>(peak)) * sample_rate / static_cast<double>(original_fft_size);
 
         // Only keep frequencies below the Nyquist frequency of the original signal.
